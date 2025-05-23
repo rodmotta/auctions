@@ -8,16 +8,23 @@ import java.time.LocalDateTime;
 public record AuctionResponse(
         Long id,
         String title,
-        BigDecimal initialPrice,
-        LocalDateTime startTime,
+        BigDecimal currentBid,
         LocalDateTime endTime
 ) {
     public AuctionResponse(AuctionEntity auctionEntity) {
         this(
                 auctionEntity.getId(),
                 auctionEntity.getTitle(),
-                auctionEntity.getInitialPrice(),
-                auctionEntity.getStartTime(),
+                auctionEntity.getStartingBid(),
+                auctionEntity.getEndTime()
+        );
+    }
+
+    public AuctionResponse(AuctionEntity auctionEntity, BigDecimal currentBid) {
+        this(
+                auctionEntity.getId(),
+                auctionEntity.getTitle(),
+                currentBid,
                 auctionEntity.getEndTime()
         );
     }

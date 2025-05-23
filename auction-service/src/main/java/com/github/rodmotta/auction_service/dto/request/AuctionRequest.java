@@ -7,12 +7,16 @@ import java.time.LocalDateTime;
 
 public record AuctionRequest(
         String title,
-        BigDecimal initialPrice,
-        BigDecimal minimumIncrement,
-        LocalDateTime startTime,
+        String description,
+        BigDecimal startingBid,
         LocalDateTime endTime
 ) {
     public AuctionEntity toEntity() {
-        return new AuctionEntity(title, initialPrice, minimumIncrement, startTime, endTime);
+        return new AuctionEntity(
+                title,
+                description,
+                startingBid,
+                endTime
+        );
     }
 }

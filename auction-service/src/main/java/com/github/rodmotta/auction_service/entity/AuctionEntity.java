@@ -13,19 +13,17 @@ public class AuctionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
-    private BigDecimal initialPrice;
-    private BigDecimal minimumIncrement;
-    private LocalDateTime startTime;
+    private String description;
+    private BigDecimal startingBid;
     private LocalDateTime endTime;
 
     public AuctionEntity() {
     }
 
-    public AuctionEntity(String title, BigDecimal initialPrice, BigDecimal minimumIncrement, LocalDateTime startTime, LocalDateTime endTime) {
+    public AuctionEntity(String title, String description, BigDecimal startingBid, LocalDateTime endTime) {
         this.title = title;
-        this.initialPrice = initialPrice;
-        this.minimumIncrement = minimumIncrement;
-        this.startTime = startTime;
+        this.description = description;
+        this.startingBid = startingBid;
         this.endTime = endTime;
     }
 
@@ -45,28 +43,20 @@ public class AuctionEntity {
         this.title = title;
     }
 
-    public BigDecimal getInitialPrice() {
-        return initialPrice;
+    public String getDescription() {
+        return description;
     }
 
-    public void setInitialPrice(BigDecimal initialPrice) {
-        this.initialPrice = initialPrice;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public BigDecimal getMinimumIncrement() {
-        return minimumIncrement;
+    public BigDecimal getStartingBid() {
+        return startingBid;
     }
 
-    public void setMinimumIncrement(BigDecimal minimumIncrement) {
-        this.minimumIncrement = minimumIncrement;
-    }
-
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
+    public void setStartingBid(BigDecimal startingBid) {
+        this.startingBid = startingBid;
     }
 
     public LocalDateTime getEndTime() {

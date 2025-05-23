@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
+
 @RestController
 @RequestMapping("auctions")
 public class AuctionController {
@@ -17,16 +20,19 @@ public class AuctionController {
     }
 
     @PostMapping
+    @ResponseStatus(CREATED)
     public void create(@RequestBody AuctionRequest auctionRequest) {
         auctionService.create(auctionRequest);
     }
 
     @GetMapping
+    @ResponseStatus(OK)
     public List<AuctionResponse> findAll() {
         return auctionService.findAll();
     }
 
     @GetMapping("{id}")
+    @ResponseStatus(OK)
     public AuctionResponse findById(@PathVariable Long id) {
         return auctionService.findById(id);
     }

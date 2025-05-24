@@ -42,7 +42,10 @@ public class BidService {
     }
 
     public List<BidResponse> getBidsByAuction(Long auctionId) {
-        return null;
+        return bidRepository.findByAuctionIdOrderByAmountDesc(auctionId)
+                .stream()
+                .map(BidResponse::new)
+                .toList();
     }
 
     public BigDecimal getHighestBidByAuction(Long auctionId) {

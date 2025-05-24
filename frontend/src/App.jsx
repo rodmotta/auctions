@@ -1,13 +1,38 @@
+import { useEffect, useState } from 'react';
 import './App.css'
+import AuctionCard from './components/AuctionCard'
+import { getAuctions } from './service/auctionService'
 
 function App() {
+  const [auctions, setAuctions] = useState([]);
+
+  useEffect(() => {
+    fetchAuctions();
+  }, []);
+
+  const fetchAuctions = async () => {
+    try {
+      const auctionsData = await getAuctions(); // Assumindo que é async
+      setAuctions(auctionsData);
+    } catch (error) {
+      console.error("Erro ao buscar leilões:", error);
+      setAuctions([]); // Fallback para array vazio
+    }
+  };
 
   return (
     <>
-      <div>
-        <h1 class="text-3xl font-bold underline">
-          Hello world!
-        </h1>
+      <div className='max-w-6xl m-auto'>
+        <h1 className='text-2xl font-bold my-4'>Leilões Ativos</h1>
+        <div className='grid grid-cols-4 gap-4'>
+          {auctions.map(auction => (
+            <AuctionCard
+              key={auction.id}
+              auction={auction}
+            />
+          ))}
+        </div>
+
       </div>
     </>
   )

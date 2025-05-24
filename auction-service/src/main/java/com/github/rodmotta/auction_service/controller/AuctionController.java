@@ -12,6 +12,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("auctions")
+@CrossOrigin("*")
 public class AuctionController {
     private final AuctionService auctionService;
 

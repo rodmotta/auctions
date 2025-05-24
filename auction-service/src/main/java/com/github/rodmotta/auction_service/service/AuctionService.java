@@ -38,7 +38,7 @@ public class AuctionService {
 
     public AuctionResponse findById(Long id) {
         return auctionRepository.findById(id)
-                .map(AuctionResponse::new)
+                .map(this::mapAuctionResponse)
                 .orElseThrow(() -> new RuntimeException("Auction not found"));
     }
 

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 async function getBidsByAuctionId(auctionId) {
-    const response = await axios.get(`http://localhost:8082/bids/auction/${auctionId}`);
+    const response = await axios.get(`http://localhost:8080/bids/auction/${auctionId}`);
     //todo - validate error
     return response.data;
 }
@@ -11,7 +11,7 @@ async function placeBid(data) {
         "auctionId": data.auctionId,
         "amount": data.amount
     };
-    const response = await axios.post("http://localhost:8082/bids", requestBody);
+    const response = await axios.post("http://localhost:8080/bids", requestBody);
     //todo - validate error
     return response.data;
 }

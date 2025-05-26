@@ -26,6 +26,18 @@ services:
     volumes:
       - bid-db-data:/var/lib/postgres/data
 
+  user-db:
+    image: postgres
+    container_name: user-db
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: userdb
+    volumes:
+      - user-db-data:/var/lib/postgres/data
+
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
@@ -41,4 +53,5 @@ services:
 volumes:
   auction-db-data:
   bid-db-data:
+  user-db-data:
   rabbitmq-data:

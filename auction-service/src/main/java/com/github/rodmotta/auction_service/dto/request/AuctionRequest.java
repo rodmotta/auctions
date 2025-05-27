@@ -11,12 +11,13 @@ public record AuctionRequest(
         BigDecimal startingBid,
         LocalDateTime endTime
 ) {
-    public AuctionEntity toEntity() {
+    public AuctionEntity toEntity(Long userId) {
         return new AuctionEntity(
                 title,
                 description,
                 startingBid,
-                endTime
+                endTime,
+                userId
         );
     }
 }

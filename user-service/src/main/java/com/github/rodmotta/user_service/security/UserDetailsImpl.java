@@ -7,12 +7,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 
-public class UserDetailsImpl implements UserDetails {
-    private final UserEntity userEntity;
-
-    public UserDetailsImpl(UserEntity userEntity) {
-        this.userEntity = userEntity;
-    }
+public record UserDetailsImpl(
+        UserEntity userEntity
+) implements UserDetails {
 
     @Override
     public String getUsername() {

@@ -11,8 +11,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import static org.springframework.http.HttpMethod.POST;
-
 @Configuration
 public class SecurityConfig {
 
@@ -20,12 +18,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(POST, "/users/register", "/users/login").permitAll())
-//                .cors(Customizer.withDefaults())
+                        .anyRequest().permitAll())
                 .csrf(AbstractHttpConfigurer::disable)
-//                .headers(headersConfig -> headersConfig
-//                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-//                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();

@@ -14,10 +14,11 @@ public class JwtService {
     //@Value("jwt.secret-key")
     private String secretKey = "test"; //todo - criar variavel de ambiente
 
-    public String generate(String subject) {
+    public String generate(Long userId) {
         try {
             return JWT.create()
-                    .withSubject(subject)
+                    .withSubject(userId.toString())
+                    .withIssuer("user-service")
                     .withIssuedAt(new Date())
                     .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 10)) //10min
                     .sign(Algorithm.HMAC256(secretKey));

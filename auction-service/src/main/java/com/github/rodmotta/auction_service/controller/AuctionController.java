@@ -2,7 +2,9 @@ package com.github.rodmotta.auction_service.controller;
 
 import com.github.rodmotta.auction_service.dto.request.AuctionRequest;
 import com.github.rodmotta.auction_service.dto.response.AuctionResponse;
+import com.github.rodmotta.auction_service.middleware.AuthenticatedUser;
 import com.github.rodmotta.auction_service.service.AuctionService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,8 +24,8 @@ public class AuctionController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public void create(@RequestBody AuctionRequest auctionRequest) {
-        auctionService.create(auctionRequest);
+    public void create(@RequestBody AuctionRequest auctionRequest, @AuthenticationPrincipal AuthenticatedUser authenticatedUser) {
+        auctionService.create(auctionRequest, authenticatedUser.userId());
     }
 
     @GetMapping

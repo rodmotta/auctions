@@ -5,6 +5,7 @@ import com.github.rodmotta.user_service.dto.request.RegisterRequest;
 import com.github.rodmotta.user_service.dto.response.JwtResponse;
 import com.github.rodmotta.user_service.entity.UserEntity;
 import com.github.rodmotta.user_service.repository.UserRepository;
+import com.github.rodmotta.user_service.security.UserDetailsImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -38,9 +39,12 @@ public class AuthService {
 
     public JwtResponse login(LoginRequest loginRequest) {
         Authentication auth = new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password());
-        authenticationManager.authenticate(auth);
+        Authentication authenticated = authenticationManager.authenticate(auth);
 
-        String accessToken = jwtService.generate(loginRequest.email());
+        var authenticatedUser = (UserDetailsImpl) authenticated.getPrincipal();
+        UserEntity user = authenticatedUser.userEntity();
+
+        String accessToken = jwtService.generate(user.getId());
         return new JwtResponse(accessToken);
     }
 }

@@ -21,11 +21,11 @@ public class AuctionService {
         this.bidClient = bidClient;
     }
 
-    public void create(AuctionRequest auctionRequest) {
+    public void create(AuctionRequest auctionRequest, Long userId) {
         if (LocalDateTime.now().isAfter(auctionRequest.endTime())) {
             throw new RuntimeException(); //todo - add error message
         }
-        var auction = auctionRequest.toEntity();
+        AuctionEntity auction = auctionRequest.toEntity(userId);
         auctionRepository.save(auction);
     }
 
@@ -46,8 +46,9 @@ public class AuctionService {
         BigDecimal currentBid = BigDecimal.ZERO;
 
         try {
-            currentBid = bidClient.getHighestBidByAuctionId(auctionEntity.getId());
-        } catch (Exception ignore) {}
+            currentBid = bidClient.getHighestBidByAuctionId(auctionEntity.getId()); //fixme- realiza N buscas no bidservice ao listar os leiloes
+        } catch (Exception ignore) {
+        }
 
         if (currentBid.equals(BigDecimal.ZERO)) {
             return new AuctionResponse(auctionEntity);

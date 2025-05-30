@@ -3,9 +3,11 @@ package com.github.rodmotta.user_service.service;
 import com.github.rodmotta.user_service.dto.request.LoginRequest;
 import com.github.rodmotta.user_service.dto.request.RegisterRequest;
 import com.github.rodmotta.user_service.dto.response.JwtResponse;
+import com.github.rodmotta.user_service.dto.response.UserResponse;
 import com.github.rodmotta.user_service.entity.UserEntity;
 import com.github.rodmotta.user_service.repository.UserRepository;
 import com.github.rodmotta.user_service.security.UserDetailsImpl;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -44,7 +46,13 @@ public class AuthService {
         var authenticatedUser = (UserDetailsImpl) authenticated.getPrincipal();
         UserEntity user = authenticatedUser.userEntity();
 
-        String accessToken = jwtService.generate(user.getId());
-        return new JwtResponse(accessToken);
+        return jwtService.generate(user.getId());
+    }
+
+    @Cacheable
+    public UserResponse getUserById(Long userId) {
+        return userRepository.findById(userId)
+                .map(UserResponse::new)
+                .orElseThrow(RuntimeException::new);
     }
 }

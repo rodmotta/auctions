@@ -3,6 +3,7 @@ package com.github.rodmotta.user_service.controller;
 import com.github.rodmotta.user_service.dto.request.LoginRequest;
 import com.github.rodmotta.user_service.dto.request.RegisterRequest;
 import com.github.rodmotta.user_service.dto.response.JwtResponse;
+import com.github.rodmotta.user_service.dto.response.UserResponse;
 import com.github.rodmotta.user_service.service.AuthService;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,7 +12,6 @@ import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("users")
-@CrossOrigin("*")
 public class AuthController {
     private final AuthService authService;
 
@@ -29,5 +29,11 @@ public class AuthController {
     @ResponseStatus(OK)
     public JwtResponse login(@RequestBody LoginRequest loginRequest) {
         return authService.login(loginRequest);
+    }
+
+    @GetMapping("{userId}")
+    @ResponseStatus(OK)
+    public UserResponse getUserById(@PathVariable Long userId) {
+        return authService.getUserById(userId);
     }
 }

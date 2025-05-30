@@ -14,6 +14,10 @@ public class BidClient {
         var response = restClient.get()
                 .uri("/bids/auction/{auctionId}/highest", auctionId)
                 .retrieve()
+                .onStatus(t -> {
+                    System.out.println(t.getStatusCode());
+                    return true;
+                })
                 .body(HighestBidResponse.class);
         return response.highestBid(); //fixme: may produce nullpointer
     }

@@ -1,9 +1,9 @@
-package com.github.rodmotta.auction_service.service;
+package com.github.rodmotta.api_gateway.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.Claim;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
@@ -11,8 +11,8 @@ import java.io.UnsupportedEncodingException;
 @Service
 public class JwtService {
 
-    //@Value("jwt.secret-key")
-    private String secretKey = "test"; //todo - criar variavel de ambiente
+    @Value("${jwt.secret-key}")
+    private String secretKey;
 
     public boolean isTokenValid(String token) {
         try {

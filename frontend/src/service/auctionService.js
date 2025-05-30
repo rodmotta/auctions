@@ -1,15 +1,19 @@
-import axios from "axios";
+import api from './api';
 
-async function getAuctions() {
-    const response = await axios.get("http://localhost:8080/auctions");
-    //todo - validate error
-    return response.data;
+export async function getAuctions() {
+    try {
+        const response = await api.get('/auctions');
+        return response.data;
+    } catch (error) {
+        console.error('Erro:', error);
+    }
 }
 
-async function getAuctionsById(auctionId) {
-    const response = await axios.get(`http://localhost:8080/auctions/${auctionId}`);
-    //todo - validate error
-    return response.data;
+export async function getAuctionsById(auctionId) {
+    try {
+        const response = await api.get(`/auctions/${auctionId}`);
+        return response.data;
+    } catch (error) {
+        console.error('Erro:', error);
+    }
 }
-
-export { getAuctions, getAuctionsById }

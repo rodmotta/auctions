@@ -19,7 +19,7 @@ function AuctionCard({ auction }) {
                 <h2 className="font-semibold text-lg">{auction.title}</h2>
                 <div className="leading-tight">
                     <p className="text-stone-500 text-sm">Lance atual</p>
-                    <p className="font-bold">R$: {formatCurrencyBR(auction.currentBid)}</p>
+                    <p className="font-bold">R$: {auction.currentBid ? formatCurrencyBR(auction.currentBid) : formatCurrencyBR(auction.startingBid)}</p>
                 </div>
             </div>
         </div>

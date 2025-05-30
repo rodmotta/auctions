@@ -21,7 +21,7 @@ public class BidService {
         this.bidRepository = bidRepository;
     }
 
-    public void placeBid(BidRequest bidRequest) {
+    public void placeBid(BidRequest bidRequest, Long userId) {
         var auction = auctionClient.getAuctionById(bidRequest.auctionId());
 
         if (auction.endTime().isBefore(LocalDateTime.now())) {
@@ -37,7 +37,7 @@ public class BidService {
             throw new IllegalArgumentException("Bid too low");
         }
 
-        BidEntity bidEntity = new BidEntity(bidRequest.auctionId(), bidRequest.amount());
+        BidEntity bidEntity = new BidEntity(bidRequest.auctionId(), userId, bidRequest.amount());
         bidRepository.save(bidEntity);
     }
 
@@ -50,7 +50,7 @@ public class BidService {
 
     public BigDecimal getHighestBidByAuction(Long auctionId) {
         var highestBid = bidRepository.findTopByAuctionIdOrderByAmountDesc(auctionId)
-                .orElse(new BidEntity(null, BigDecimal.ZERO));
+                .orElse(new BidEntity(null, null, BigDecimal.ZERO));//fixme
         return highestBid.getAmount();
     }
 }

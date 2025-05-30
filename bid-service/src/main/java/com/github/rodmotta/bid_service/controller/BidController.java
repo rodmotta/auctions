@@ -14,7 +14,6 @@ import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("bids")
-@CrossOrigin("*")
 public class BidController {
     private final BidService bidService;
 
@@ -24,8 +23,8 @@ public class BidController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public void placeBid(@RequestBody BidRequest bidRequest) {
-        bidService.placeBid(bidRequest);
+    public void placeBid(@RequestBody BidRequest bidRequest, @RequestHeader("x-user-id") Long userId) {
+        bidService.placeBid(bidRequest, userId);
     }
 
     @GetMapping("/auction/{auctionId}")

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import './App.css'
 import AuctionCard from './components/AuctionCard'
 import { getAuctions } from './service/auctionService'
+import Navbar from './components/Navbar';
 
 function App() {
   const [auctions, setAuctions] = useState([]);
@@ -22,7 +23,8 @@ function App() {
 
   return (
     <>
-      <div className='max-w-6xl m-auto'>
+      <Navbar/>
+      <div className='max-w-6xl m-auto'>  
         <h1 className='text-2xl font-bold my-4'>Leilões Ativos</h1>
         <div className='grid grid-cols-4 gap-4'>
           {auctions.map(auction => (

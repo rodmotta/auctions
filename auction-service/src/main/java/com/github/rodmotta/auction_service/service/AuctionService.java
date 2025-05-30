@@ -1,6 +1,7 @@
 package com.github.rodmotta.auction_service.service;
 
 import com.github.rodmotta.auction_service.client.BidClient;
+import com.github.rodmotta.auction_service.client.UserClient;
 import com.github.rodmotta.auction_service.dto.request.AuctionRequest;
 import com.github.rodmotta.auction_service.dto.response.AuctionResponse;
 import com.github.rodmotta.auction_service.entity.AuctionEntity;
@@ -15,10 +16,12 @@ import java.util.List;
 public class AuctionService {
     private final AuctionRepository auctionRepository;
     private final BidClient bidClient;
+    private final UserClient userClient;
 
-    public AuctionService(AuctionRepository auctionRepository, BidClient bidClient) {
+    public AuctionService(AuctionRepository auctionRepository, BidClient bidClient, UserClient userClient) {
         this.auctionRepository = auctionRepository;
         this.bidClient = bidClient;
+        this.userClient = userClient;
     }
 
     public void create(AuctionRequest auctionRequest, Long userId) {
@@ -43,6 +46,8 @@ public class AuctionService {
     }
 
     private AuctionResponse mapAuctionResponse(AuctionEntity auctionEntity) {
+        String sellerName = getSellerName(auctionEntity); //fixme- realiza N buscas no userservice ao listar os leiloes
+
         BigDecimal currentBid = BigDecimal.ZERO;
 
         try {
@@ -51,8 +56,13 @@ public class AuctionService {
         }
 
         if (currentBid.equals(BigDecimal.ZERO)) {
-            return new AuctionResponse(auctionEntity);
+            return new AuctionResponse(auctionEntity, null, sellerName);
         }
-        return new AuctionResponse(auctionEntity, currentBid);
+        return new AuctionResponse(auctionEntity, currentBid, sellerName);
+    }
+
+    private String getSellerName(AuctionEntity auctionEntity) {
+        return userClient.getUserName(auctionEntity.getUserId())
+                .name();
     }
 }

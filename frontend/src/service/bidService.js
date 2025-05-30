@@ -1,19 +1,18 @@
-import axios from "axios";
+import api from './api';
 
-async function getBidsByAuctionId(auctionId) {
-    const response = await axios.get(`http://localhost:8080/bids/auction/${auctionId}`);
-    //todo - validate error
-    return response.data;
+export async function getBidsByAuctionId(auctionId) {
+    try {
+        const response = await api.get(`/bids/auction/${auctionId}`);
+        return response.data;
+    } catch (error) {
+        console.error('Erro:', error);
+    }
 }
 
-async function placeBid(data) {
-    const requestBody = {
-        "auctionId": data.auctionId,
-        "amount": data.amount
-    };
-    const response = await axios.post("http://localhost:8080/bids", requestBody);
-    //todo - validate error
-    return response.data;
+export async function placeBid(payload) {
+    try {
+        await api.post('/bids', payload);
+    } catch (error) {
+        console.error('Erro:', error);
+    }
 }
-
-export { getBidsByAuctionId, placeBid }

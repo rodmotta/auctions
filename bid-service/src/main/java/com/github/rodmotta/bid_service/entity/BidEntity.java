@@ -17,8 +17,9 @@ public class BidEntity {
     private BigDecimal amount;
     private LocalDateTime timestamp;
 
-    public BidEntity(Long auctionId, BigDecimal amount) {
+    public BidEntity(Long auctionId, Long userId, BigDecimal amount) {
         this.auctionId = auctionId;
+        this.userId = userId;
         this.amount = amount;
         this.timestamp = LocalDateTime.now();
     }

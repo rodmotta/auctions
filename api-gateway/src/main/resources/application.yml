@@ -15,6 +15,9 @@ spring:
           predicates:
             - Path=/users/register, /users/login
 
+jwt:
+  secret-key: test
+
 logging:
   level:
     org.springframework.cloud.gateway: DEBUG

@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: api-gateway
   cloud:
     gateway:
       routes:
@@ -14,6 +16,11 @@ spring:
           uri: http://localhost:8083
           predicates:
             - Path=/users/register, /users/login
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
 
 jwt:
   secret-key: test

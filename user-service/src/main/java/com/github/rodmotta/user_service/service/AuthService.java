@@ -6,11 +6,7 @@ import com.github.rodmotta.user_service.dto.response.JwtResponse;
 import com.github.rodmotta.user_service.dto.response.UserResponse;
 import com.github.rodmotta.user_service.entity.UserEntity;
 import com.github.rodmotta.user_service.repository.UserRepository;
-import com.github.rodmotta.user_service.security.UserDetailsImpl;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,13 +15,11 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-    private final AuthenticationManager authenticationManager;
 
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager) {
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
-        this.authenticationManager = authenticationManager;
     }
 
     public void register(RegisterRequest registerRequest) {
@@ -40,11 +34,12 @@ public class AuthService {
     }
 
     public JwtResponse login(LoginRequest loginRequest) {
-        Authentication auth = new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password());
-        Authentication authenticated = authenticationManager.authenticate(auth);
+        var user = userRepository.findByEmail(loginRequest.email())
+                .orElseThrow(() -> new RuntimeException("Invalid email or password"));
 
-        var authenticatedUser = (UserDetailsImpl) authenticated.getPrincipal();
-        UserEntity user = authenticatedUser.userEntity();
+        if (!passwordEncoder.matches(loginRequest.password(), user.getPassword())) {
+            throw new RuntimeException("Invalid email or password");
+        }
 
         return jwtService.generate(user.getId());
     }

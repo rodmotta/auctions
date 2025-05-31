@@ -38,6 +38,12 @@ services:
     volumes:
       - user-db-data:/var/lib/postgres/data
 
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq

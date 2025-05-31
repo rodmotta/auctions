@@ -53,7 +53,11 @@ public class AuthenticationFilter implements GlobalFilter {
                 .header("x-user-id", userId)
                 .build();
 
-        return chain.filter(exchange.mutate().request(mutatedRequest).build());
+        ServerWebExchange mutatedExchange = exchange.mutate()
+                .request(mutatedRequest)
+                .build();
+
+        return chain.filter(mutatedExchange);
     }
 
     private boolean isPublicPath(ServerHttpRequest request) {

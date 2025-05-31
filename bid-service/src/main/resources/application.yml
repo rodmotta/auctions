@@ -1,6 +1,8 @@
 server:
   port: 8082
 spring:
+  application:
+    name: bid-service
   datasource:
     url: jdbc:postgresql://localhost:5433/biddb
     username: admin
@@ -14,3 +16,8 @@ spring:
     port: 5672
     username: admin
     password: admin
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0

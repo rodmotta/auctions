@@ -1,6 +1,5 @@
 package com.github.rodmotta.auction_service.service;
 
-import com.github.rodmotta.auction_service.client.BidClient;
 import com.github.rodmotta.auction_service.client.UserClient;
 import com.github.rodmotta.auction_service.dto.request.AuctionRequest;
 import com.github.rodmotta.auction_service.dto.response.AuctionResponse;
@@ -15,12 +14,10 @@ import java.util.List;
 @Service
 public class AuctionService {
     private final AuctionRepository auctionRepository;
-    private final BidClient bidClient;
     private final UserClient userClient;
 
-    public AuctionService(AuctionRepository auctionRepository, BidClient bidClient, UserClient userClient) {
+    public AuctionService(AuctionRepository auctionRepository, UserClient userClient) {
         this.auctionRepository = auctionRepository;
-        this.bidClient = bidClient;
         this.userClient = userClient;
     }
 
@@ -28,7 +25,8 @@ public class AuctionService {
         if (LocalDateTime.now().isAfter(auctionRequest.endTime())) {
             throw new RuntimeException(); //todo - add error message
         }
-        AuctionEntity auction = auctionRequest.toEntity(userId);
+        AuctionEntity auction = auctionRequest.toEntity();
+        auction.setUserId(userId);
         auctionRepository.save(auction);
     }
 
@@ -47,22 +45,18 @@ public class AuctionService {
 
     private AuctionResponse mapAuctionResponse(AuctionEntity auctionEntity) {
         String sellerName = getSellerName(auctionEntity); //fixme- realiza N buscas no userservice ao listar os leiloes
-
-        BigDecimal currentBid = BigDecimal.ZERO;
-
-        try {
-            currentBid = bidClient.getHighestBidByAuctionId(auctionEntity.getId()); //fixme- realiza N buscas no bidservice ao listar os leiloes
-        } catch (Exception ignore) {
-        }
-
-        if (currentBid.equals(BigDecimal.ZERO)) {
-            return new AuctionResponse(auctionEntity, null, sellerName);
-        }
-        return new AuctionResponse(auctionEntity, currentBid, sellerName);
+        return new AuctionResponse(auctionEntity, sellerName);
     }
 
     private String getSellerName(AuctionEntity auctionEntity) {
         return userClient.getUserName(auctionEntity.getUserId())
                 .name();
+    }
+
+    public void updateHighestBid(Long auctionId, BigDecimal amount) {
+        AuctionEntity auctionEntity = auctionRepository.findById(auctionId)
+                .orElseThrow(); //fixme
+        auctionEntity.setCurrentBid(amount);
+        auctionRepository.save(auctionEntity);
     }
 }

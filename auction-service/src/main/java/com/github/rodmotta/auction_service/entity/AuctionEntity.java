@@ -15,18 +15,19 @@ public class AuctionEntity {
     private String title;
     private String description;
     private BigDecimal startingBid;
+    private BigDecimal currentBid;
     private LocalDateTime endTime;
     private Long userId;
 
     public AuctionEntity() {
     }
 
-    public AuctionEntity(String title, String description, BigDecimal startingBid, LocalDateTime endTime, Long userId) {
+    public AuctionEntity(String title, String description, BigDecimal startingBid, LocalDateTime endTime) {
         this.title = title;
         this.description = description;
         this.startingBid = startingBid;
+        this.currentBid = BigDecimal.ZERO;
         this.endTime = endTime;
-        this.userId = userId;
     }
 
     public Long getId() {
@@ -59,6 +60,14 @@ public class AuctionEntity {
 
     public void setStartingBid(BigDecimal startingBid) {
         this.startingBid = startingBid;
+    }
+
+    public BigDecimal getCurrentBid() {
+        return currentBid;
+    }
+
+    public void setCurrentBid(BigDecimal currentBid) {
+        this.currentBid = currentBid;
     }
 
     public LocalDateTime getEndTime() {

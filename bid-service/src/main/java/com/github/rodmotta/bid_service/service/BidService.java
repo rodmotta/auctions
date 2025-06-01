@@ -4,7 +4,9 @@ import com.github.rodmotta.bid_service.client.AuctionClient;
 import com.github.rodmotta.bid_service.dto.request.BidRequest;
 import com.github.rodmotta.bid_service.dto.response.BidResponse;
 import com.github.rodmotta.bid_service.entity.BidEntity;
+import com.github.rodmotta.bid_service.message.BidEventPublisher;
 import com.github.rodmotta.bid_service.repository.BidRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -15,12 +17,15 @@ import java.util.List;
 public class BidService {
     private final AuctionClient auctionClient;
     private final BidRepository bidRepository;
+    private final BidEventPublisher bidEventPublisher;
 
-    public BidService(AuctionClient auctionClient, BidRepository bidRepository) {
+    public BidService(AuctionClient auctionClient, BidRepository bidRepository, BidEventPublisher bidEventPublisher) {
         this.auctionClient = auctionClient;
         this.bidRepository = bidRepository;
+        this.bidEventPublisher = bidEventPublisher;
     }
 
+    @Transactional
     public void placeBid(BidRequest bidRequest, Long userId) {
         var auction = auctionClient.getAuctionById(bidRequest.auctionId());
 
@@ -29,16 +34,21 @@ public class BidService {
         }
 
         BigDecimal highestBid = getHighestBidByAuction(auction.id());
-        if (highestBid.equals(BigDecimal.ZERO)) {
-            highestBid = auction.currentBid();
-        }
 
         if (bidRequest.amount().compareTo(highestBid) <= 0) {
             throw new IllegalArgumentException("Bid too low");
         }
 
-        BidEntity bidEntity = new BidEntity(bidRequest.auctionId(), userId, bidRequest.amount());
+        BidEntity bidEntity = bidRequest.toEntity();
+        bidEntity.setUserId(userId);
         bidRepository.save(bidEntity);
+        bidEventPublisher.publishNewBid(bidRequest);
+    }
+
+    private BigDecimal getHighestBidByAuction(Long auctionId) {
+        return bidRepository.findTopByAuctionIdOrderByAmountDesc(auctionId)
+                .map(BidEntity::getAmount)
+                .orElse(BigDecimal.ZERO);
     }
 
     public List<BidResponse> getBidsByAuction(Long auctionId) {
@@ -46,11 +56,5 @@ public class BidService {
                 .stream()
                 .map(BidResponse::new)
                 .toList();
-    }
-
-    public BigDecimal getHighestBidByAuction(Long auctionId) {
-        var highestBid = bidRepository.findTopByAuctionIdOrderByAmountDesc(auctionId)
-                .orElse(new BidEntity(null, null, BigDecimal.ZERO));//fixme
-        return highestBid.getAmount();
     }
 }

@@ -52,7 +52,7 @@ public class BidService {
     }
 
     public List<BidResponse> getBidsByAuction(Long auctionId) {
-        return bidRepository.findByAuctionIdOrderByAmountDesc(auctionId)
+        return bidRepository.findTop5ByAuctionIdOrderByAmountDesc(auctionId)
                 .stream()
                 .map(BidResponse::new)
                 .toList();

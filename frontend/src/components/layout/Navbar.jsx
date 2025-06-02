@@ -1,6 +1,7 @@
 import { Bell, User } from "lucide-react"
 import { useNavigate } from "react-router"
-import { useAuth } from "../hooks/useAuth"
+import { useAuth } from "../../hooks/useAuth"
+import Button from "../shared/Button";
 
 function Navbar() {
 
@@ -27,24 +28,26 @@ function Navbar() {
                                 </span>
                             }
                         </button>
-                        <button className="hover:bg-stone-100 rounded-lg px-2 py-2 cursor-pointer">
-                            <User />
-                        </button>
+                        <Button
+                            variant='ghost'
+                            className='px-2 py-2'
+                            text={<User />}
+                        />
                     </div>
                     :
                     <div className="flex gap-2">
-                        <button
+                        <Button
+                            variant='outlined'
+                            className='px-4 py-2'
+                            text='Entrar'
                             onClick={() => navigate('/login')}
-                            className="border border-stone-300 font-semibold rounded-lg px-4 py-2 cursor-pointer"
-                        >
-                            Entrar
-                        </button>
-                        <button
+                        />
+                        <Button
+                            variant='filled'
+                            className='px-4 py-2'
+                            text='Cadastrar'
                             onClick={() => navigate('/register')}
-                            className="bg-black text-white font-semibold rounded-lg px-4 py-2 cursor-pointer"
-                        >
-                            Cadastrar
-                        </button>
+                        />
                     </div>
                 }
 

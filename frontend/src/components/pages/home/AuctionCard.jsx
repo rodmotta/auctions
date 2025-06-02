@@ -1,6 +1,6 @@
 import { Clock } from 'lucide-react';
 import { useNavigate } from 'react-router';
-import { formatCurrencyBR, formatTimeRemaining } from '../utils/formatterUtils';
+import { formatCurrencyBR, formatTimeRemaining } from '../../../utils/formatterUtils';
 
 function AuctionCard({ auction }) {
     const navigate = useNavigate();

@@ -1,11 +1,12 @@
-import { formatCurrencyBR, formatDateTimeBR, formatTimeRemaining } from "../utils/formatterUtils";
+import { formatCurrencyBR, formatDateTimeBR, formatTimeRemaining } from '../../../utils/formatterUtils';
 import { Banknote, Clock, User } from "lucide-react";
 import { useParams } from "react-router";
-import { getAuctionsById } from "../service/auctionService";
+import { getAuctionsById } from "../../../service/auctionService";
 import { useEffect, useState } from "react";
-import { getBidsByAuctionId, placeBid } from "../service/bidService";
+import { getBidsByAuctionId, placeBid } from "../../../service/bidService"
 import { useForm } from "react-hook-form";
-import Navbar from "../components/Navbar";
+import Navbar from "../../layout/Navbar";
+import Button from "../../shared/Button";
 
 function AuctionDetailsPage() {
 
@@ -78,12 +79,13 @@ function AuctionDetailsPage() {
                                     required
                                     {...register("amount")}
                                 />
-                                <button
-                                    className="bg-black text-white font-semibold rounded-r-lg h-[40px] px-4 py-2 disabled:bg-neutral-500 disabled:cursor-not-allowed"
+                                <Button
+                                    variant='filled'
+                                    className='px-4 py-2 rounded-l-none disabled:bg-neutral-500 disabled:cursor-not-allowed'
                                     type="submit"
-                                    disabled={isAuctionFinished}>
-                                    Dar Lance
-                                </button>
+                                    disabled={isAuctionFinished}
+                                    text='Dar Lance'
+                                />
                             </form>
                         </div>
                         <div>
@@ -107,7 +109,7 @@ function AuctionDetailsPage() {
                     </div>
                 </div>
                 <div className="border border-stone-300 rounded-lg p-4 mt-4">
-                    <h3 className="mb-4 font-semibold text-lg">Histórico de lances</h3>
+                    <h3 className="mb-4 font-semibold text-lg">Maiores lances</h3>
                     <ul className="flex flex-col gap-4">
                         {bids?.map(bid => (
                             <li key={bid.id}>

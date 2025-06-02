@@ -14,9 +14,9 @@ function Navbar() {
         <div className="border-b border-stone-300 py-2" >
             <div className="flex justify-between items-center max-w-6xl m-auto">
                 <h1 className="text-xl font-semibold">Leilão Online</h1>
-                <input type="text" name="" id=""
+                {/* <input type="text" name="" id=""
                     className="border border-stone-300 rounded-lg px-4 py-2"
-                    placeholder="Buscar leilões..." />
+                    placeholder="Buscar leilões..." /> */}
                 {isAuthenticated()
                     ?
                     <div className="flex gap-2">

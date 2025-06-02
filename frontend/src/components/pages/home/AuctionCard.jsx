@@ -1,13 +1,16 @@
 import { Clock } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import { formatCurrencyBR, formatTimeRemaining } from '../../../utils/formatterUtils';
+import BorderBox from '../../shared/BorderBox';
 
 function AuctionCard({ auction }) {
     const navigate = useNavigate();
 
     return (
-        <div className="border border-stone-300 hover:border-stone-600 rounded-lg cursor-pointer"
-            onClick={() => navigate(`/auction/${auction.id}`)}>
+        <BorderBox
+            className="hover:border-stone-600 cursor-pointer !p-0"
+            onClick={() => navigate(`/auction/${auction.id}`)}
+        >
             <figure>
                 <img className='rounded-t-lg' src="https://images.unsplash.com/photo-1506610654-064fbba4780c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" />
             </figure>
@@ -22,7 +25,7 @@ function AuctionCard({ auction }) {
                     <p className="font-bold">R$: {auction.currentBid ? formatCurrencyBR(auction.currentBid) : formatCurrencyBR(auction.startingBid)}</p>
                 </div>
             </div>
-        </div>
+        </BorderBox>
     )
 }
 

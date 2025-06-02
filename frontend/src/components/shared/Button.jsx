@@ -1,4 +1,10 @@
-function Button({ text, onClick, variant, className, ...props }) {
+function Button({
+    text,
+    onClick,
+    variant,
+    className,
+    ...props
+}) {
 
     const baseStyles = 'font-semibold rounded-lg cursor-pointer'
 

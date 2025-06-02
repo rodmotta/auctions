@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import { register as registerUser } from "../../../service/userService";
 import Button from "../../shared/Button";
 import InputField from "../../shared/InputField";
+import BorderBox from "../../shared/BorderBox";
 
 function RegisterPage() {
     const navigate = useNavigate();
@@ -19,7 +20,9 @@ function RegisterPage() {
 
     return (
         <div className="h-screen flex justify-center items-center">
-            <div className="w-full max-w-md border border-stone-300 rounded-lg p-4">
+            <BorderBox
+                className="w-full max-w-md"
+            >
                 <form
                     onSubmit={handleSubmit(onSubmit)}
                     className="flex flex-col gap-4"
@@ -59,7 +62,7 @@ function RegisterPage() {
                         text='Criar conta'
                     />
                 </form>
-            </div>
+            </BorderBox>
         </div>
     )
 }

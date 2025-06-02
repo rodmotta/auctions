@@ -23,7 +23,6 @@ function HomePage() {
   return (
     <>
       <Navbar/>
-
       <div className='max-w-6xl m-auto'>  
         <h1 className='text-2xl font-bold my-4'>Leilões Ativos</h1>
         <div className='grid grid-cols-4 gap-4'>

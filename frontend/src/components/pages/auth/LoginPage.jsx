@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { useAuth } from "../../../hooks/useAuth";
 import Button from "../../shared/Button";
 import InputField from "../../shared/InputField";
+import BorderBox from "../../shared/BorderBox";
 
 function LoginPage() {
     const navigate = useNavigate();
@@ -23,7 +24,7 @@ function LoginPage() {
 
     return (
         <div className="h-screen flex justify-center items-center">
-            <div className="w-full max-w-md border border-stone-300 rounded-lg p-4">
+            <BorderBox className="w-full max-w-md border">
                 <form
                     onSubmit={handleSubmit(onSubmit)}
                     className="flex flex-col gap-4"
@@ -55,7 +56,7 @@ function LoginPage() {
                         text='Entrar'
                     />
                 </form>
-            </div>
+            </BorderBox>
         </div>
     )
 }

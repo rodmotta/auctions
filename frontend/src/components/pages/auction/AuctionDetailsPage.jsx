@@ -1,28 +1,30 @@
-import { formatCurrencyBR, formatDateTimeBR, formatTimeRemaining } from '../../../utils/formatterUtils';
+import { formatCurrencyBR, formatTimeRemaining } from '../../../utils/formatterUtils';
 import { Banknote, Clock, User } from "lucide-react";
 import { useParams } from "react-router";
 import { getAuctionsById } from "../../../service/auctionService";
 import { useEffect, useState } from "react";
-import { getBidsByAuctionId, placeBid } from "../../../service/bidService"
-import { useForm } from "react-hook-form";
 import Navbar from "../../layout/Navbar";
-import Button from "../../shared/Button";
+import BidsHistoryCard from './BidsHistoryCard';
+import PlaceBidForm from './PlaceBidForm';
+import BorderBox from '../../shared/BorderBox';
+import { Client } from '@stomp/stompjs';
+import { getBidsByAuctionId } from '../../../service/bidService';
 
 function AuctionDetailsPage() {
 
     const { id } = useParams();
     const [auction, setAuction] = useState(null);
-    const [bids, setBids] = useState(null)
-    const { register, handleSubmit } = useForm();
+    const [bids, setBids] = useState([]);
 
     useEffect(() => {
         fetchAuctionById();
         fetchBidsByAuctionId();
+        connectWebSocket();
     }, [id]);
 
     const fetchAuctionById = async () => {
         try {
-            const auctionData = await getAuctionsById(id); // Assumindo que é async
+            const auctionData = await getAuctionsById(id);
             setAuction(auctionData);
         } catch (error) {
             console.error("Erro ao buscar leilões:", error);
@@ -31,16 +33,27 @@ function AuctionDetailsPage() {
 
     const fetchBidsByAuctionId = async () => {
         try {
-            const bidsData = await getBidsByAuctionId(id); // Assumindo que é async
+            const bidsData = await getBidsByAuctionId(id);
             setBids(bidsData);
         } catch (error) {
             console.error("Erro ao buscar lances:", error);
         }
     };
 
-    const submitPlaceBid = async (data) => {
-        const bidData = { ...data, auctionId: Number(id) };
-        await placeBid(bidData);
+    const connectWebSocket = () => {
+        const stompClient = new Client({
+            brokerURL: 'ws://localhost:8082/ws',
+            reconnectDelay: 5000,
+            onConnect: () => {
+                stompClient.subscribe(`/topic/auction/${id}/bids`, message => {
+                    const bids = JSON.parse(message.body);
+                    setBids(bids);
+                });
+            },
+        })
+
+        stompClient.activate();
+        return () => stompClient.deactivate();
     }
 
     if (!auction || !bids) {
@@ -48,8 +61,6 @@ function AuctionDetailsPage() {
             <div>Carregando...</div>
         )
     }
-
-    const isAuctionFinished = new Date() > new Date(auction.endTime);
 
     return (
         <div>
@@ -68,26 +79,13 @@ function AuctionDetailsPage() {
                             <Clock className='mr-2 h-4 w-4' />
                             {formatTimeRemaining(auction.endTime)}
                         </div>
-                        <div className="border border-stone-300 rounded-lg p-4">
+                        <BorderBox>
                             <p className="text-stone-500">Lance atual</p>
-                            <p className="text-3xl font-bold">R$: {auction.currentBid ? formatCurrencyBR(auction.currentBid) : formatCurrencyBR(auction.startingBid)}</p>
-
-                            <form onSubmit={handleSubmit(submitPlaceBid)} className="flex mt-4">
-                                <input
-                                    className="border border-stone-300 rounded-l-lg flex-1 h-[40px] px-4 py-2"
-                                    type="number"
-                                    required
-                                    {...register("amount")}
-                                />
-                                <Button
-                                    variant='filled'
-                                    className='px-4 py-2 rounded-l-none disabled:bg-neutral-500 disabled:cursor-not-allowed'
-                                    type="submit"
-                                    disabled={isAuctionFinished}
-                                    text='Dar Lance'
-                                />
-                            </form>
-                        </div>
+                            <p className="text-3xl font-bold">R$: {bids && bids.length > 0
+                                ? formatCurrencyBR(bids[0].amount)
+                                : formatCurrencyBR(auction.startingBid)}</p>
+                            <PlaceBidForm auction={auction} />
+                        </BorderBox>
                         <div>
                             <div className="flex flex-col gap-2 my-4 text-stone-500">
                                 <div>
@@ -108,23 +106,7 @@ function AuctionDetailsPage() {
                         </div>
                     </div>
                 </div>
-                <div className="border border-stone-300 rounded-lg p-4 mt-4">
-                    <h3 className="mb-4 font-semibold text-lg">Maiores lances</h3>
-                    <ul className="flex flex-col gap-4">
-                        {bids?.map(bid => (
-                            <li key={bid.id}>
-                                <div className="flex justify-between items-center border border-stone-300 rounded-lg px-4 py-2">
-                                    <div className="flex items-center">
-                                        <User className="mr-2 h-4 w-4" />
-                                        <span>Username</span>
-                                    </div>
-                                    <span>{formatDateTimeBR(bid.timestamp)}</span>
-                                    <span className="text-xl font-bold">R$ {formatCurrencyBR(bid.amount)}</span>
-                                </div>
-                            </li>
-                        )) ?? <p>Nenhum lance encontrado</p>}
-                    </ul>
-                </div>
+                <BidsHistoryCard bids={bids} />
             </div>
         </div>
     )

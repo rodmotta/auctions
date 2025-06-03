@@ -7,6 +7,7 @@ public record AuctionResponse(
         Long id,
         String title,
         BigDecimal currentBid,
+        BigDecimal startingBid,
         LocalDateTime endTime
 ) {
 }

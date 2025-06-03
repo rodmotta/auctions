@@ -48,9 +48,11 @@ public class AuthenticationFilter implements GlobalFilter {
         }
 
         String userId = jwtService.getSubject(token);
+        String userName = jwtService.getClaims(token).get("username").asString();
 
         ServerHttpRequest mutatedRequest = request.mutate()
                 .header("x-user-id", userId)
+                .header("x-user-name", userName)
                 .build();
 
         ServerWebExchange mutatedExchange = exchange.mutate()

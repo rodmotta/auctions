@@ -14,6 +14,7 @@ public class BidEntity {
     private Long id;
     private Long auctionId;
     private Long userId;
+    private String userName;
     private BigDecimal amount;
     private LocalDateTime timestamp;
 
@@ -48,6 +49,14 @@ public class BidEntity {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public BigDecimal getAmount() {

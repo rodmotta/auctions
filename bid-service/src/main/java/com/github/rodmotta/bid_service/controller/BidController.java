@@ -2,6 +2,7 @@ package com.github.rodmotta.bid_service.controller;
 
 import com.github.rodmotta.bid_service.dto.request.BidRequest;
 import com.github.rodmotta.bid_service.dto.response.BidResponse;
+import com.github.rodmotta.bid_service.dto.response.UserResponse;
 import com.github.rodmotta.bid_service.service.BidService;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,8 +22,11 @@ public class BidController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public void placeBid(@RequestBody BidRequest bidRequest, @RequestHeader("x-user-id") Long userId) {
-        bidService.placeBid(bidRequest, userId);
+    public void placeBid(@RequestBody BidRequest bidRequest,
+                         @RequestHeader("x-user-id") Long userId,
+                         @RequestHeader("x-user-name") String userName) {
+        var user = new UserResponse(userId, userName);
+        bidService.placeBid(bidRequest, user);
     }
 
     @GetMapping("/auction/{auctionId}")

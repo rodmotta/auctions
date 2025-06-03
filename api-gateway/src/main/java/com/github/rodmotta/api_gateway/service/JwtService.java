@@ -3,10 +3,12 @@ package com.github.rodmotta.api_gateway.service;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.Claim;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 @Service
 public class JwtService {
@@ -28,5 +30,10 @@ public class JwtService {
     public String getSubject(String token) {
         return JWT.decode(token)
                 .getSubject();
+    }
+
+    public Map<String, Claim> getClaims(String token) {
+        return JWT.decode(token)
+                .getClaims();
     }
 }

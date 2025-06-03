@@ -2,6 +2,7 @@ package com.github.rodmotta.auction_service.controller;
 
 import com.github.rodmotta.auction_service.dto.request.AuctionRequest;
 import com.github.rodmotta.auction_service.dto.response.AuctionResponse;
+import com.github.rodmotta.auction_service.dto.response.UserResponse;
 import com.github.rodmotta.auction_service.service.AuctionService;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,8 +22,11 @@ public class AuctionController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public void create(@RequestBody AuctionRequest auctionRequest, @RequestHeader("x-user-id") Long userId) {
-        auctionService.create(auctionRequest, userId);
+    public void create(@RequestBody AuctionRequest auctionRequest,
+                       @RequestHeader("x-user-id") Long userId,
+                       @RequestHeader("x-user-name") String userName) {
+        var user = new UserResponse(userId, userName);
+        auctionService.create(auctionRequest, user);
     }
 
     @GetMapping

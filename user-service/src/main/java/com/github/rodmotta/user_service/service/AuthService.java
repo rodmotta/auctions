@@ -41,7 +41,7 @@ public class AuthService {
             throw new RuntimeException("Invalid email or password");
         }
 
-        return jwtService.generate(user.getId());
+        return jwtService.generate(user);
     }
 
     @Cacheable

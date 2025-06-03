@@ -18,6 +18,7 @@ public class AuctionEntity {
     private BigDecimal currentBid;
     private LocalDateTime endTime;
     private Long userId;
+    private String userName;
 
     public AuctionEntity() {
     }
@@ -84,5 +85,13 @@ public class AuctionEntity {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

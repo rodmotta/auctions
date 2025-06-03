@@ -14,14 +14,14 @@ public record AuctionResponse(
         String sellerName
 ) {
 
-    public AuctionResponse(AuctionEntity auctionEntity, String sellerName) {
+    public AuctionResponse(AuctionEntity auctionEntity) {
         this(
                 auctionEntity.getId(),
                 auctionEntity.getTitle(),
                 auctionEntity.getStartingBid(),
                 auctionEntity.getCurrentBid(),
                 auctionEntity.getEndTime(),
-                sellerName
+                auctionEntity.getUserName()
         );
     }
 }

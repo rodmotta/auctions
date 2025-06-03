@@ -5,6 +5,7 @@ import com.github.rodmotta.user_service.dto.request.RegisterRequest;
 import com.github.rodmotta.user_service.dto.response.JwtResponse;
 import com.github.rodmotta.user_service.dto.response.UserResponse;
 import com.github.rodmotta.user_service.service.AuthService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -21,13 +22,13 @@ public class AuthController {
 
     @PostMapping("register")
     @ResponseStatus(CREATED)
-    public void register(@RequestBody RegisterRequest registerRequest) {
+    public void register(@RequestBody @Valid RegisterRequest registerRequest) {
         authService.register(registerRequest);
     }
 
     @PostMapping("login")
     @ResponseStatus(OK)
-    public JwtResponse login(@RequestBody LoginRequest loginRequest) {
+    public JwtResponse login(@RequestBody @Valid LoginRequest loginRequest) {
         return authService.login(loginRequest);
     }
 

@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.github.rodmotta.user_service.dto.response.JwtResponse;
 import com.github.rodmotta.user_service.entity.UserEntity;
+import com.github.rodmotta.user_service.exception.ValidationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,7 @@ public class JwtService {
 
             return new JwtResponse(accessToken, expiration);
         } catch (UnsupportedEncodingException | JWTCreationException | IllegalArgumentException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new ValidationException(e.getMessage());
         }
     }
 }

@@ -4,6 +4,8 @@ import com.github.rodmotta.auction_service.dto.request.AuctionRequest;
 import com.github.rodmotta.auction_service.dto.response.AuctionResponse;
 import com.github.rodmotta.auction_service.dto.response.UserResponse;
 import com.github.rodmotta.auction_service.entity.AuctionEntity;
+import com.github.rodmotta.auction_service.exception.NotFoundException;
+import com.github.rodmotta.auction_service.exception.ValidationException;
 import com.github.rodmotta.auction_service.repository.AuctionRepository;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +23,7 @@ public class AuctionService {
 
     public void create(AuctionRequest auctionRequest, UserResponse user) {
         if (LocalDateTime.now().isAfter(auctionRequest.endTime())) {
-            throw new RuntimeException(); //todo - add error message
+            throw new ValidationException("End time must be a future date");
         }
         AuctionEntity auction = auctionRequest.toEntity();
         auction.setUserId(user.id());
@@ -39,12 +41,12 @@ public class AuctionService {
     public AuctionResponse findById(Long id) {
         return auctionRepository.findById(id)
                 .map(AuctionResponse::new)
-                .orElseThrow(() -> new RuntimeException("Auction not found"));
+                .orElseThrow(() -> new NotFoundException("Auction not found"));
     }
 
     public void updateHighestBid(Long auctionId, BigDecimal amount) {
         AuctionEntity auctionEntity = auctionRepository.findById(auctionId)
-                .orElseThrow(); //fixme
+                .orElseThrow(() -> new NotFoundException("Auction not found"));
         auctionEntity.setCurrentBid(amount);
         auctionRepository.save(auctionEntity);
     }

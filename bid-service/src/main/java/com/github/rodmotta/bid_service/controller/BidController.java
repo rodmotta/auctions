@@ -4,6 +4,7 @@ import com.github.rodmotta.bid_service.dto.request.BidRequest;
 import com.github.rodmotta.bid_service.dto.response.BidResponse;
 import com.github.rodmotta.bid_service.dto.response.UserResponse;
 import com.github.rodmotta.bid_service.service.BidService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class BidController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public void placeBid(@RequestBody BidRequest bidRequest,
+    public void placeBid(@RequestBody @Valid BidRequest bidRequest,
                          @RequestHeader("x-user-id") Long userId,
                          @RequestHeader("x-user-name") String userName) {
         var user = new UserResponse(userId, userName);

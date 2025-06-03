@@ -6,6 +6,7 @@ import com.github.rodmotta.bid_service.dto.response.AuctionResponse;
 import com.github.rodmotta.bid_service.dto.response.BidResponse;
 import com.github.rodmotta.bid_service.dto.response.UserResponse;
 import com.github.rodmotta.bid_service.entity.BidEntity;
+import com.github.rodmotta.bid_service.exception.ValidationException;
 import com.github.rodmotta.bid_service.message.BidEventPublisher;
 import com.github.rodmotta.bid_service.repository.BidRepository;
 import jakarta.transaction.Transactional;
@@ -35,13 +36,13 @@ public class BidService {
         var auction = auctionClient.getAuctionById(bidRequest.auctionId());
 
         if (auction.endTime().isBefore(LocalDateTime.now())) {
-            throw new IllegalStateException("Auction already closed");
+            throw new ValidationException("Auction already closed");
         }
 
         BigDecimal highestBid = getHighestBidByAuction(auction);
 
         if (bidRequest.amount().compareTo(highestBid) <= 0) {
-            throw new IllegalArgumentException("Bid too low");
+            throw new ValidationException("Bid too low");
         }
 
         BidEntity bidEntity = bidRequest.toEntity();

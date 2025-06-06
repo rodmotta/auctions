@@ -26,23 +26,34 @@ services:
     volumes:
       - bid-db-data:/var/lib/postgres/data
 
-  user-db:
+  auth-db:
     image: postgres
-    container_name: user-db
+    container_name: auth-db
     ports:
-      - "5434:5432"
+      - "5435:5432"
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
-      POSTGRES_DB: userdb
+      POSTGRES_DB: keycloakdb
     volumes:
-      - user-db-data:/var/lib/postgres/data
+      - auth-db-data:/var/lib/postgres/data
 
-  zipkin:
-    image: openzipkin/zipkin
-    container_name: zipkin
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.2.5
+    container_name: keycloak
+    depends_on:
+      - auth-db
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://auth-db:5432/keycloakdb
+      KC_DB_USERNAME: admin
+      KC_DB_PASSWORD: admin
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    command:
+      - start-dev
     ports:
-      - "9411:9411"
+        - "8000:8080"
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -56,8 +67,14 @@ services:
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
 
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+
 volumes:
   auction-db-data:
   bid-db-data:
-  user-db-data:
+  auth-db-data:
   rabbitmq-data:

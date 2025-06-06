@@ -1,18 +1,47 @@
 import api from './api';
 
-export async function register(payload) {
+export function exchangeCode(code, redirectUri = "http://localhost:5173/callback") {
     try {
-        await api.post('/users/register', payload);
+        const payload = {
+            code: code,
+            redirectUri: redirectUri
+        };
+        const config = {
+            skipAuth: true
+        }
+        return api.post('/auth/token', payload, config);
     } catch (error) {
         console.error('Erro:', error);
+        throw error;
     }
 }
 
-export async function login(payload) {
+export function refreshAccessToken(refreshToken) {
     try {
-        const response = await api.post('/users/login', payload);
-        return response.data;
+        const payload = {
+            refreshToken: refreshToken
+        };
+        const config = {
+            skipAuth: true
+        }
+        return api.post('/auth/refresh-token', payload, config);
     } catch (error) {
         console.error('Erro:', error);
+        throw error;
+    }
+}
+
+export function invalidateRefreshToken(refreshToken) {
+    try {
+        const payload = {
+            refreshToken: refreshToken
+        };
+        const config = {
+            skipAuth: true
+        }
+        return api.post('/auth/logout', payload, config);
+    } catch (error) {
+        console.error('Erro:', error);
+        throw error;
     }
 }

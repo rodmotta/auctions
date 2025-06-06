@@ -5,9 +5,12 @@ import com.github.rodmotta.bid_service.dto.response.BidResponse;
 import com.github.rodmotta.bid_service.dto.response.UserResponse;
 import com.github.rodmotta.bid_service.service.BidService;
 import jakarta.validation.Valid;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -24,9 +27,8 @@ public class BidController {
     @PostMapping
     @ResponseStatus(CREATED)
     public void placeBid(@RequestBody @Valid BidRequest bidRequest,
-                         @RequestHeader("x-user-id") Long userId,
-                         @RequestHeader("x-user-name") String userName) {
-        var user = new UserResponse(userId, userName);
+                         @AuthenticationPrincipal Jwt jwt) {
+        var user = new UserResponse(jwt);
         bidService.placeBid(bidRequest, user);
     }
 

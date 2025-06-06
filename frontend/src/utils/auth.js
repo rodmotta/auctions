@@ -1,0 +1,14 @@
+export const loginWithKeycloak = () => {
+  const clientId = "auction-app";
+  const redirectUri = "http://localhost:5173/callback";
+  const realm = "auction-realm";
+  const keycloakBaseUri = "http://localhost:8000";
+
+  const authUrl = `${keycloakBaseUri}/realms/${realm}/protocol/openid-connect/auth` +
+    `?client_id=${clientId}` +
+    `&response_type=code` +
+    `&redirect_uri=${redirectUri}` +
+    `&scope=openid`;
+
+  window.location.href = authUrl;
+};

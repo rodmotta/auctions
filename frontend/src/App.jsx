@@ -1,8 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router";
 import HomePage from "./components/pages/home/HomePage";
-import RegisterPage from "./components/pages/auth/RegisterPage";
-import LoginPage from "./components/pages/auth/LoginPage";
 import AuctionDetailsPage from "./components/pages/auction/AuctionDetailsPage";
+import AuthCallbackPage from "./components/pages/auth/AuthCallbackPage";
 
 const router = createBrowserRouter([
   {
@@ -10,12 +9,8 @@ const router = createBrowserRouter([
     element: <HomePage />,
   },
   {
-    path: "/register",
-    element: <RegisterPage />,
-  },
-  {
-    path: "/login",
-    element: <LoginPage />,
+    path: "/callback",
+    element: <AuthCallbackPage />,
   },
   {
     path: "/auction/:id",

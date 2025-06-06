@@ -16,7 +16,6 @@ function HomePage() {
       setAuctions(auctionsData);
     } catch (error) {
       console.error("Erro ao buscar leilões:", error);
-      setAuctions([]); // Fallback para array vazio
     }
   };
 

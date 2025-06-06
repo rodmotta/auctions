@@ -1,12 +1,19 @@
-import { Bell, User } from "lucide-react"
-import { useNavigate } from "react-router"
-import { useAuth } from "../../hooks/useAuth"
+import { Bell, LogOut } from "lucide-react"
 import Button from "../shared/Button";
+import { loginWithKeycloak } from "../../utils/auth";
+import authStore from "../../stores/authStore";
+import { useNavigate } from "react-router";
 
 function Navbar() {
-
     const navigate = useNavigate();
-    const { isAuthenticated } = useAuth();
+
+    const isAuthenticated = authStore((state) => state.isAuthenticated);
+    const { logout } = authStore();
+
+    const handleLogout = () => {
+        logout();
+        navigate('/');
+    }
 
     const notificationCount = 1
 
@@ -14,10 +21,7 @@ function Navbar() {
         <div className="border-b border-stone-300 py-2" >
             <div className="flex justify-between items-center max-w-6xl m-auto">
                 <h1 className="text-xl font-semibold">Leilão Online</h1>
-                {/* <input type="text" name="" id=""
-                    className="border border-stone-300 rounded-lg px-4 py-2"
-                    placeholder="Buscar leilões..." /> */}
-                {isAuthenticated()
+                {isAuthenticated
                     ?
                     <div className="flex gap-2">
                         <button className="relative hover:bg-stone-100 rounded-lg px-2 py-2 cursor-pointer">
@@ -31,7 +35,8 @@ function Navbar() {
                         <Button
                             variant='ghost'
                             className='px-2 py-2'
-                            text={<User />}
+                            text={<LogOut />}
+                            onClick={handleLogout}
                         />
                     </div>
                     :
@@ -40,13 +45,7 @@ function Navbar() {
                             variant='outlined'
                             className='px-4 py-2'
                             text='Entrar'
-                            onClick={() => navigate('/login')}
-                        />
-                        <Button
-                            variant='filled'
-                            className='px-4 py-2'
-                            text='Cadastrar'
-                            onClick={() => navigate('/register')}
+                            onClick={loginWithKeycloak}
                         />
                     </div>
                 }

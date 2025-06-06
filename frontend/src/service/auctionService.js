@@ -2,7 +2,10 @@ import api from './api';
 
 export async function getAuctions() {
     try {
-        const response = await api.get('/auctions');
+        const config = {
+            skipAuth: true
+        }
+        const response = await api.get('/auctions', config);
         return response.data;
     } catch (error) {
         console.error('Erro:', error);
@@ -11,7 +14,10 @@ export async function getAuctions() {
 
 export async function getAuctionsById(auctionId) {
     try {
-        const response = await api.get(`/auctions/${auctionId}`);
+        const config = {
+            skipAuth: true
+        }
+        const response = await api.get(`/auctions/${auctionId}`, config);
         return response.data;
     } catch (error) {
         console.error('Erro:', error);

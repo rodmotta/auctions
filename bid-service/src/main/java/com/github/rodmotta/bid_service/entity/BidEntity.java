@@ -13,7 +13,7 @@ public class BidEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long auctionId;
-    private Long userId;
+    private String userId;
     private String userName;
     private BigDecimal amount;
     private LocalDateTime timestamp;
@@ -43,11 +43,11 @@ public class BidEntity {
         this.auctionId = auctionId;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

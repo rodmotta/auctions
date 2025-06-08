@@ -5,9 +5,9 @@ import java.time.LocalDateTime;
 
 public record AuctionResponse(
         Long id,
-        String title,
-        BigDecimal currentBid,
-        BigDecimal startingBid,
-        LocalDateTime endTime
+        BigDecimal currentPrice,
+        BigDecimal startingPrice,
+        LocalDateTime endDate,
+        String ownerId
 ) {
 }

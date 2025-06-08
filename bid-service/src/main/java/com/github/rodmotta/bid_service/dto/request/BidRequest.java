@@ -1,6 +1,6 @@
 package com.github.rodmotta.bid_service.dto.request;
 
-import com.github.rodmotta.bid_service.entity.BidEntity;
+import com.github.rodmotta.bid_service.persistence.entity.BidEntity;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 

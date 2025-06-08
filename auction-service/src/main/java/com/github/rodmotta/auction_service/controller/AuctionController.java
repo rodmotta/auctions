@@ -10,7 +10,6 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -34,7 +33,7 @@ public class AuctionController {
 
     @GetMapping
     @ResponseStatus(OK)
-    public List<AuctionResponse> findAll(@RequestHeader Map<String, String> headers) {
+    public List<AuctionResponse> findAll() {
         return auctionService.findAll();
     }
 

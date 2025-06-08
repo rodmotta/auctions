@@ -5,10 +5,11 @@ import com.github.rodmotta.bid_service.dto.request.BidRequest;
 import com.github.rodmotta.bid_service.dto.response.AuctionResponse;
 import com.github.rodmotta.bid_service.dto.response.BidResponse;
 import com.github.rodmotta.bid_service.dto.response.UserResponse;
-import com.github.rodmotta.bid_service.entity.BidEntity;
-import com.github.rodmotta.bid_service.exception.ValidationException;
-import com.github.rodmotta.bid_service.message.BidEventPublisher;
-import com.github.rodmotta.bid_service.repository.BidRepository;
+import com.github.rodmotta.bid_service.exception.custom.ValidationException;
+import com.github.rodmotta.bid_service.messaging.model.UpdateCurrentPriceEventMessage;
+import com.github.rodmotta.bid_service.messaging.publisher.BidEventPublisher;
+import com.github.rodmotta.bid_service.persistence.entity.BidEntity;
+import com.github.rodmotta.bid_service.persistence.repository.BidRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -33,10 +34,11 @@ public class BidService {
 
     @Transactional
     public void placeBid(BidRequest bidRequest, UserResponse user) {
+
         var auction = auctionClient.getAuctionById(bidRequest.auctionId());
 
-        if (auction.endTime().isBefore(LocalDateTime.now())) {
-            throw new ValidationException("Auction already closed");
+        if (auction.ownerId().equals(user.id())) {
+            throw new ValidationException("The auction owner cannot bid");
         }
 
         BigDecimal highestBid = getHighestBidByAuction(auction);
@@ -45,18 +47,22 @@ public class BidService {
             throw new ValidationException("Bid too low");
         }
 
+        if (auction.endDate().isBefore(LocalDateTime.now())) {
+            throw new ValidationException("Auction already closed");
+        }
+
         BidEntity bidEntity = bidRequest.toEntity();
         bidEntity.setUserId(user.id());
         bidEntity.setUserName(user.name());
         bidRepository.save(bidEntity);
-        bidEventPublisher.publishNewBid(bidRequest);
+        bidEventPublisher.publishNewBid(new UpdateCurrentPriceEventMessage(bidRequest.auctionId(), bidRequest.amount()));
         notifyTopBids(bidEntity.getAuctionId());
     }
 
     private BigDecimal getHighestBidByAuction(AuctionResponse auction) {
         return bidRepository.findTopByAuctionIdOrderByAmountDesc(auction.id())
                 .map(BidEntity::getAmount)
-                .orElse(auction.startingBid());
+                .orElse(auction.startingPrice());
     }
 
     private void notifyTopBids(Long auctionId) {

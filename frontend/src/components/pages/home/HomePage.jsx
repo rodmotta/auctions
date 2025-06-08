@@ -4,6 +4,7 @@ import { getAuctions } from '../../../service/auctionService';
 import Navbar from '../../layout/Navbar';
 
 function HomePage() {
+
   const [auctions, setAuctions] = useState([]);
 
   useEffect(() => {
@@ -12,7 +13,8 @@ function HomePage() {
 
   const fetchAuctions = async () => {
     try {
-      const auctionsData = await getAuctions(); // Assumindo que é async
+      const response = await getAuctions();
+      const auctionsData = response.data;
       setAuctions(auctionsData);
     } catch (error) {
       console.error("Erro ao buscar leilões:", error);
@@ -20,11 +22,10 @@ function HomePage() {
   };
 
   return (
-    <>
-      <Navbar/>
-      <div className='max-w-6xl m-auto'>  
-        <h1 className='text-2xl font-bold my-4'>Leilões Ativos</h1>
-        <div className='grid grid-cols-4 gap-4'>
+    <div className='flex flex-col gap-4'>
+      <Navbar />
+      <div className='max-w-6xl m-auto'>
+        <div className='grid grid-cols-3 gap-4'>
           {auctions.map(auction => (
             <AuctionCard
               key={auction.id}
@@ -32,9 +33,8 @@ function HomePage() {
             />
           ))}
         </div>
-
       </div>
-    </>
+    </div>
   )
 }
 

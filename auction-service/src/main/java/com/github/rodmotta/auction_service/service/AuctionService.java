@@ -3,14 +3,13 @@ package com.github.rodmotta.auction_service.service;
 import com.github.rodmotta.auction_service.dto.request.AuctionRequest;
 import com.github.rodmotta.auction_service.dto.response.AuctionResponse;
 import com.github.rodmotta.auction_service.dto.response.UserResponse;
-import com.github.rodmotta.auction_service.entity.AuctionEntity;
-import com.github.rodmotta.auction_service.exception.NotFoundException;
-import com.github.rodmotta.auction_service.exception.ValidationException;
-import com.github.rodmotta.auction_service.repository.AuctionRepository;
+import com.github.rodmotta.auction_service.exception.custom.NotFoundException;
+import com.github.rodmotta.auction_service.exception.custom.ValidationException;
+import com.github.rodmotta.auction_service.persistence.entity.AuctionEntity;
+import com.github.rodmotta.auction_service.persistence.repository.AuctionRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -21,13 +20,15 @@ public class AuctionService {
         this.auctionRepository = auctionRepository;
     }
 
-    public void create(AuctionRequest auctionRequest, UserResponse user) {
-        if (LocalDateTime.now().isAfter(auctionRequest.endTime())) {
-            throw new ValidationException("End time must be a future date");
+    public void create(AuctionRequest auctionRequest, UserResponse owner) {
+        if (auctionRequest.startDate().isAfter(auctionRequest.endDate())) {
+            throw new ValidationException("Start date must be greater than end date");
         }
+
         AuctionEntity auction = auctionRequest.toEntity();
-        auction.setUserId(user.id());
-        auction.setUserName(user.name());
+        auction.setOwnerId(owner.id());
+        auction.setOwnerName(owner.name());
+
         auctionRepository.save(auction);
     }
 
@@ -44,10 +45,10 @@ public class AuctionService {
                 .orElseThrow(() -> new NotFoundException("Auction not found"));
     }
 
-    public void updateHighestBid(Long auctionId, BigDecimal amount) {
+    public void updateCurrentPriceEvent(Long auctionId, BigDecimal amount) {
         AuctionEntity auctionEntity = auctionRepository.findById(auctionId)
                 .orElseThrow(() -> new NotFoundException("Auction not found"));
-        auctionEntity.setCurrentBid(amount);
+        auctionEntity.setCurrentPrice(amount);
         auctionRepository.save(auctionEntity);
     }
 }

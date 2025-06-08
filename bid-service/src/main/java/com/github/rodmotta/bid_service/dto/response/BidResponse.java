@@ -1,6 +1,6 @@
 package com.github.rodmotta.bid_service.dto.response;
 
-import com.github.rodmotta.bid_service.entity.BidEntity;
+import com.github.rodmotta.bid_service.persistence.entity.BidEntity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

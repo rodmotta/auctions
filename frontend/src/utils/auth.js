@@ -1,4 +1,4 @@
-export const loginWithKeycloak = () => {
+export const getKeycloakLoginUrl = () => {
   const clientId = "auction-app";
   const redirectUri = "http://localhost:5173/callback";
   const realm = "auction-realm";

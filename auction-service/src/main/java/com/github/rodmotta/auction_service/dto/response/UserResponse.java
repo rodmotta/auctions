@@ -7,6 +7,9 @@ public record UserResponse(
         String name
 ) {
     public UserResponse(Jwt jwt) {
-        this(jwt.getSubject(), jwt.getClaimAsString("name"));
+        this(
+                jwt.getSubject(),
+                jwt.getClaimAsString("name")
+        );
     }
 }

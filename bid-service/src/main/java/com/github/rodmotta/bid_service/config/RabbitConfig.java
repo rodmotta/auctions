@@ -7,11 +7,11 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitConfig {
-    public static final String BID_QUEUE = "bid.new";
+    public static final String AUCTION_BID_QUEUE = "auction-bid.created";
 
     @Bean
-    public Queue queue() {
-        return new Queue(BID_QUEUE, true);
+    public Queue auctionBidQueue() {
+        return new Queue(AUCTION_BID_QUEUE, true);
     }
 
     @Bean

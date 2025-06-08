@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router";
 import HomePage from "./components/pages/home/HomePage";
-import AuctionDetailsPage from "./components/pages/auction/AuctionDetailsPage";
 import AuthCallbackPage from "./components/pages/auth/AuthCallbackPage";
+import AuctionDetailPage from "./components/pages/auction/AuctionDetailPage";
 
 const router = createBrowserRouter([
   {
@@ -14,7 +14,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/auction/:id",
-    element: <AuctionDetailsPage />,
+    element: <AuctionDetailPage />,
   }
 ]);
 

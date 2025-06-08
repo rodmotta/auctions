@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { exchangeCode, refreshAccessToken, invalidateRefreshToken } from "../service/userService";
+import { exchangeCode, refreshAccessToken, invalidateRefreshToken } from "../service/authService";
 
 const authStore = create((set, get) => {
     const isAuthenticated = !!localStorage.getItem("accessToken"); //converte em boleano

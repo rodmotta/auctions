@@ -1,6 +1,6 @@
 package com.github.rodmotta.auction_service.dto.request;
 
-import com.github.rodmotta.auction_service.entity.AuctionEntity;
+import com.github.rodmotta.auction_service.persistence.entity.AuctionEntity;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
@@ -14,17 +14,25 @@ public record AuctionRequest(
         String description,
         @NotNull
         @Positive
-        BigDecimal startingBid,
+        BigDecimal startingPrice,
+        @NotNull
+        @Positive
+        BigDecimal minimumIncrement,
         @NotNull
         @Future
-        LocalDateTime endTime
+        LocalDateTime startDate,
+        @NotNull
+        @Future
+        LocalDateTime endDate
 ) {
     public AuctionEntity toEntity() {
         return new AuctionEntity(
                 title,
                 description,
-                startingBid,
-                endTime
+                startingPrice,
+                minimumIncrement,
+                startDate,
+                endDate
         );
     }
 }

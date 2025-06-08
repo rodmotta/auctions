@@ -1,31 +1,36 @@
-import { Clock } from 'lucide-react';
 import { useNavigate } from 'react-router';
-import { formatCurrencyBR, formatTimeRemaining } from '../../../utils/formatterUtils';
-import BorderBox from '../../shared/BorderBox';
+import { formatCurrencyBR } from '../../../utils/formatterUtils';
 
 function AuctionCard({ auction }) {
     const navigate = useNavigate();
 
     return (
-        <BorderBox
-            className="hover:border-stone-600 cursor-pointer !p-0"
-            onClick={() => navigate(`/auction/${auction.id}`)}
-        >
+        <div className="card  border border-stone-300 rounded-xl">
             <figure>
-                <img className='rounded-t-lg' src="https://images.unsplash.com/photo-1506610654-064fbba4780c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" />
+                <img
+                    src="https://totenart.pt/blog/wp-content/uploads/2025/02/la-persistencia-de-la-memoria-dali-cuadro-arte-moderno-768x560.jpg"
+                    alt="" />
             </figure>
-            <div className="flex items-center bg-stone-600 text-white px-2 py-1">
-                <Clock className='mr-2 h-4 w-4' />
-                {formatTimeRemaining(auction.endTime)}
-            </div>
-            <div className="p-4">
-                <h2 className="font-semibold text-lg">{auction.title}</h2>
-                <div className="leading-tight">
-                    <p className="text-stone-500 text-sm">Lance atual</p>
-                    <p className="font-bold">R$: {auction.currentBid ? formatCurrencyBR(auction.currentBid) : formatCurrencyBR(auction.startingBid)}</p>
+            <div className="card-body">
+                <h2 className="card-title">{auction.title}</h2>
+                <p>{auction.description}</p>
+                <div className='flex justify-between'>
+                    <span>Preço atual: </span>
+                    <span className='text-xl font-bold text-green-600'>R$: {formatCurrencyBR(auction.currentPrice)}</span>
+                </div>
+                <div className='flex justify-between'>
+                    <span>Preço inicial: </span>
+                    <span>R$: {formatCurrencyBR(auction.startingPrice)}</span>
+                </div>
+                <div className="card-actions">
+                    <button
+                        className="btn btn-neutral rounded-lg w-full"
+                        onClick={() => navigate(`/auction/${auction.id}`)}
+                    >
+                        Ver Leilão</button>
                 </div>
             </div>
-        </BorderBox>
+        </div>
     )
 }
 

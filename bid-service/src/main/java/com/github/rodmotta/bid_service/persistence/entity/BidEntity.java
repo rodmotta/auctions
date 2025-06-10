@@ -16,12 +16,11 @@ public class BidEntity {
     private String userId;
     private String userName;
     private BigDecimal amount;
-    private LocalDateTime timestamp;
+    private LocalDateTime createdAt;
 
     public BidEntity(Long auctionId, BigDecimal amount) {
         this.auctionId = auctionId;
         this.amount = amount;
-        this.timestamp = LocalDateTime.now();
     }
 
     public BidEntity() {
@@ -67,11 +66,11 @@ public class BidEntity {
         this.amount = amount;
     }
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

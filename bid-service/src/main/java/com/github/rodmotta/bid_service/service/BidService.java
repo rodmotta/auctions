@@ -6,7 +6,6 @@ import com.github.rodmotta.bid_service.dto.response.AuctionResponse;
 import com.github.rodmotta.bid_service.dto.response.BidResponse;
 import com.github.rodmotta.bid_service.dto.response.UserResponse;
 import com.github.rodmotta.bid_service.exception.custom.ValidationException;
-import com.github.rodmotta.bid_service.messaging.model.UpdateCurrentPriceEventMessage;
 import com.github.rodmotta.bid_service.messaging.publisher.BidEventPublisher;
 import com.github.rodmotta.bid_service.persistence.entity.BidEntity;
 import com.github.rodmotta.bid_service.persistence.repository.BidRepository;
@@ -17,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BidService {
@@ -34,40 +34,36 @@ public class BidService {
 
     @Transactional
     public void placeBid(BidRequest bidRequest, UserResponse user) {
+        LocalDateTime now = LocalDateTime.now();
 
-        var auction = auctionClient.getAuctionById(bidRequest.auctionId());
+        AuctionResponse auction = auctionClient.getAuctionById(bidRequest.auctionId());
+        validateAuction(user, auction, now);
 
-        if (auction.ownerId().equals(user.id())) {
-            throw new ValidationException("The auction owner cannot bid");
-        }
+        Optional<BidEntity> currentHighestBid = bidRepository.findTopByAuctionIdOrderByAmountDesc(auction.id());
 
-        BigDecimal highestBid = getHighestBidByAuction(auction);
+        BigDecimal baseAmount = currentHighestBid
+                .map(BidEntity::getAmount)
+                .orElse(auction.startingPrice());
 
-        if (bidRequest.amount().compareTo(highestBid) <= 0) {
+        BigDecimal minimumRequiredBid = baseAmount.add(auction.minimumIncrement());
+
+        if (bidRequest.amount().compareTo(minimumRequiredBid) < 0) {
             throw new ValidationException("Bid too low");
         }
 
-        if (auction.endDate().isBefore(LocalDateTime.now())) {
-            throw new ValidationException("Auction already closed");
-        }
+        BidEntity newBid = bidRequest.toEntity();
+        newBid.setCreatedAt(now);
+        newBid.setUserId(user.id());
+        newBid.setUserName(user.name());
+        bidRepository.save(newBid);
 
-        BidEntity bidEntity = bidRequest.toEntity();
-        bidEntity.setUserId(user.id());
-        bidEntity.setUserName(user.name());
-        bidRepository.save(bidEntity);
-        bidEventPublisher.publishNewBid(new UpdateCurrentPriceEventMessage(bidRequest.auctionId(), bidRequest.amount()));
-        notifyTopBids(bidEntity.getAuctionId());
-    }
+        String previousBidderId = currentHighestBid
+                .map(BidEntity::getUserId)
+                .orElse(null);
 
-    private BigDecimal getHighestBidByAuction(AuctionResponse auction) {
-        return bidRepository.findTopByAuctionIdOrderByAmountDesc(auction.id())
-                .map(BidEntity::getAmount)
-                .orElse(auction.startingPrice());
-    }
+        bidEventPublisher.placeBid(newBid, auction, user, previousBidderId, now);
 
-    private void notifyTopBids(Long auctionId) {
-        List<BidResponse> topBids = getBidsByAuction(auctionId);
-        messagingTemplate.convertAndSend("/topic/auction/" + auctionId + "/bids", topBids);
+        notifyTopBids(newBid.getAuctionId());
     }
 
     public List<BidResponse> getBidsByAuction(Long auctionId) {
@@ -75,5 +71,20 @@ public class BidService {
                 .stream()
                 .map(BidResponse::new)
                 .toList();
+    }
+
+    private void validateAuction(UserResponse user, AuctionResponse auction, LocalDateTime now) {
+        if (auction.ownerId().equals(user.id())) {
+            throw new ValidationException("The auction owner cannot bid");
+        }
+
+        if (auction.endDate().isBefore(now)) {
+            throw new ValidationException("Auction already closed");
+        }
+    }
+
+    private void notifyTopBids(Long auctionId) {
+        List<BidResponse> topBids = getBidsByAuction(auctionId);
+        messagingTemplate.convertAndSend("/topic/auction/" + auctionId + "/bids", topBids);
     }
 }

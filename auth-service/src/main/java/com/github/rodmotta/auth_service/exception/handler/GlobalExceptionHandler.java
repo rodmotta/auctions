@@ -1,6 +1,5 @@
-package com.github.rodmotta.auth_service.exception;
+package com.github.rodmotta.auth_service.exception.handler;
 
-import com.github.rodmotta.auth_service.dto.response.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;

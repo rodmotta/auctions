@@ -1,4 +1,4 @@
-package com.github.rodmotta.auction_service.exception.dto;
+package com.github.rodmotta.auction_service.exception.handler;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 

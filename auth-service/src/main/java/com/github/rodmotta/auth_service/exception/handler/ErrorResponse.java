@@ -1,4 +1,4 @@
-package com.github.rodmotta.auth_service.dto.response;
+package com.github.rodmotta.auth_service.exception.handler;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 

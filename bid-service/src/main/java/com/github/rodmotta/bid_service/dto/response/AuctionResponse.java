@@ -5,8 +5,10 @@ import java.time.LocalDateTime;
 
 public record AuctionResponse(
         Long id,
+        String title,
         BigDecimal currentPrice,
         BigDecimal startingPrice,
+        BigDecimal minimumIncrement,
         LocalDateTime endDate,
         String ownerId
 ) {

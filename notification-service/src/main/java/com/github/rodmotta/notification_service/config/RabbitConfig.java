@@ -1,4 +1,4 @@
-package com.github.rodmotta.auction_service.config;
+package com.github.rodmotta.notification_service.config;
 
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitConfig {
     public static final String BID_PLACED_EXCHANGE = "bid.placed";
-    public static final String BID_QUEUE = "auction-service-bid-queue";
+    public static final String BID_QUEUE = "notification-service-bid-queue";
 
     @Bean
     public FanoutExchange bidPlacedExchange() {

@@ -1,8 +1,8 @@
 package com.github.rodmotta.auction_service.service;
 
+import com.github.rodmotta.auction_service.security.User;
 import com.github.rodmotta.auction_service.dto.request.AuctionRequest;
 import com.github.rodmotta.auction_service.dto.response.AuctionResponse;
-import com.github.rodmotta.auction_service.dto.response.UserResponse;
 import com.github.rodmotta.auction_service.exception.custom.NotFoundException;
 import com.github.rodmotta.auction_service.exception.custom.ValidationException;
 import com.github.rodmotta.auction_service.persistence.entity.AuctionEntity;
@@ -20,9 +20,9 @@ public class AuctionService {
         this.auctionRepository = auctionRepository;
     }
 
-    public void create(AuctionRequest auctionRequest, UserResponse owner) {
+    public void create(AuctionRequest auctionRequest, User owner) {
         if (auctionRequest.startDate().isAfter(auctionRequest.endDate())) {
-            throw new ValidationException("Start date must be greater than end date");
+            throw new ValidationException("Start date must be before end date");
         }
 
         AuctionEntity auction = auctionRequest.toEntity();

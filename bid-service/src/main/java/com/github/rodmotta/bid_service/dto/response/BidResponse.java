@@ -18,7 +18,7 @@ public record BidResponse(
                 bidEntity.getAuctionId(),
                 bidEntity.getUserName(),
                 bidEntity.getAmount(),
-                bidEntity.getTimestamp()
+                bidEntity.getCreatedAt()
         );
     }
 }

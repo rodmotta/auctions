@@ -26,6 +26,18 @@ services:
     volumes:
       - bid-db-data:/var/lib/postgres/data
 
+  notification-db:
+    image: postgres
+    container_name: notification-db
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: notificationdb
+    volumes:
+      - notification-db-data:/var/lib/postgres/data
+
   auth-db:
     image: postgres
     container_name: auth-db
@@ -76,5 +88,6 @@ services:
 volumes:
   auction-db-data:
   bid-db-data:
+  notification-db-data:
   auth-db-data:
   rabbitmq-data:

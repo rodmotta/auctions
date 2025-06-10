@@ -2,7 +2,6 @@ package com.github.rodmotta.auction_service.exception.handler;
 
 import com.github.rodmotta.auction_service.exception.custom.NotFoundException;
 import com.github.rodmotta.auction_service.exception.custom.ValidationException;
-import com.github.rodmotta.auction_service.exception.dto.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;

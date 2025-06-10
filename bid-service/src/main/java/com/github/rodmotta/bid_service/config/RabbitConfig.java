@@ -1,17 +1,17 @@
 package com.github.rodmotta.bid_service.config;
 
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitConfig {
-    public static final String AUCTION_BID_QUEUE = "auction-bid.created";
+    public static final String BID_PLACED_EXCHANGE = "bid.placed";
 
     @Bean
-    public Queue auctionBidQueue() {
-        return new Queue(AUCTION_BID_QUEUE, true);
+    public FanoutExchange bidPlacedExchange() {
+        return new FanoutExchange(BID_PLACED_EXCHANGE);
     }
 
     @Bean

@@ -1,9 +1,14 @@
 package com.github.rodmotta.bid_service.messaging.publisher;
 
 import com.github.rodmotta.bid_service.config.RabbitConfig;
-import com.github.rodmotta.bid_service.messaging.model.UpdateCurrentPriceEventMessage;
+import com.github.rodmotta.bid_service.dto.response.AuctionResponse;
+import com.github.rodmotta.bid_service.dto.response.UserResponse;
+import com.github.rodmotta.bid_service.messaging.model.BidPlacedEventMessage;
+import com.github.rodmotta.bid_service.persistence.entity.BidEntity;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
 
 @Component
 public class BidEventPublisher {
@@ -13,7 +18,15 @@ public class BidEventPublisher {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    public void publishNewBid(UpdateCurrentPriceEventMessage message) {
-        rabbitTemplate.convertAndSend(RabbitConfig.AUCTION_BID_QUEUE, message);
+    public void placeBid(BidEntity bidEntity, AuctionResponse auctionResponse, UserResponse user, String previousBidderId, LocalDateTime placedAt) {
+        BidPlacedEventMessage message = new BidPlacedEventMessage(
+                auctionResponse.id(),
+                auctionResponse.title(),
+                bidEntity.getAmount(),
+                user.id(),
+                previousBidderId,
+                placedAt);
+
+        rabbitTemplate.convertAndSend(RabbitConfig.BID_PLACED_EXCHANGE, "", message);
     }
 }

@@ -1,6 +1,5 @@
 package com.github.rodmotta.auction_service.persistence.entity;
 
-import com.github.rodmotta.auction_service.enums.AuctionStatus;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -21,7 +20,6 @@ public class AuctionEntity {
     private BigDecimal minimumIncrement;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private AuctionStatus status;
     private String ownerId;
     private String ownerName;
     private String winnerId;
@@ -40,7 +38,6 @@ public class AuctionEntity {
         this.minimumIncrement = minimumIncrement;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.status = AuctionStatus.NOT_STARTED;
         this.createdAt = LocalDateTime.now();
     }
 
@@ -114,14 +111,6 @@ public class AuctionEntity {
 
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
-    }
-
-    public AuctionStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(AuctionStatus status) {
-        this.status = status;
     }
 
     public String getOwnerId() {

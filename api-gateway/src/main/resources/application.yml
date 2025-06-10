@@ -23,6 +23,10 @@ spring:
           uri: http://localhost:8083
           predicates:
             - Path=/auth/token, /auth/refresh-token, /auth/logout
+        - id: notification-service
+          uri: http://localhost:8084
+          predicates:
+            - Path=/notifications
 
 management:
   tracing:

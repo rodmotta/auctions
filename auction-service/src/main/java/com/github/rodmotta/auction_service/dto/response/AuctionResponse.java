@@ -12,6 +12,7 @@ public record AuctionResponse(
         BigDecimal startingPrice,
         BigDecimal currentPrice,
         BigDecimal minimumIncrement,
+        LocalDateTime startDate,
         LocalDateTime endDate,
         String ownerId,
         String ownerName
@@ -25,6 +26,7 @@ public record AuctionResponse(
                 auctionEntity.getStartingPrice(),
                 auctionEntity.getCurrentPrice(),
                 auctionEntity.getMinimumIncrement(),
+                auctionEntity.getStartDate(),
                 auctionEntity.getEndDate(),
                 auctionEntity.getOwnerId(),
                 auctionEntity.getOwnerName()

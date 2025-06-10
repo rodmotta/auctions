@@ -1,8 +1,9 @@
 package com.github.rodmotta.auction_service.controller;
 
+import com.github.rodmotta.auction_service.security.JwtUserExtractor;
+import com.github.rodmotta.auction_service.security.User;
 import com.github.rodmotta.auction_service.dto.request.AuctionRequest;
 import com.github.rodmotta.auction_service.dto.response.AuctionResponse;
-import com.github.rodmotta.auction_service.dto.response.UserResponse;
 import com.github.rodmotta.auction_service.service.AuctionService;
 import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,21 +26,21 @@ public class AuctionController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public void create(@RequestBody @Valid AuctionRequest auctionRequest,
-                       @AuthenticationPrincipal Jwt jwt) {
-        var user = new UserResponse(jwt);
-        auctionService.create(auctionRequest, user);
+    public void createAuction(@RequestBody @Valid AuctionRequest auctionRequest,
+                              @AuthenticationPrincipal Jwt jwt) {
+        User loggedUser = JwtUserExtractor.from(jwt);
+        auctionService.create(auctionRequest, loggedUser);
     }
 
     @GetMapping
     @ResponseStatus(OK)
-    public List<AuctionResponse> findAll() {
+    public List<AuctionResponse> getAllAuctions() {
         return auctionService.findAll();
     }
 
     @GetMapping("{id}")
     @ResponseStatus(OK)
-    public AuctionResponse findById(@PathVariable Long id) {
+    public AuctionResponse getAuctionById(@PathVariable Long id) {
         return auctionService.findById(id);
     }
 }

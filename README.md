@@ -29,6 +29,12 @@ sistemas distribuídos.
 5. Quando o `access_token` expira, o `refresh_token` é utilizado para obter um novo par de tokens sem necessidade de novo login.
 6. O API Gateway valida os tokens em cada requisição, garantindo o acesso apenas a usuários autenticados.
 
+## 📸 Imagens da interface do usuario
+![01](./assets/printscreen-01.png)
+![02](./assets/printscreen-02.png)
+![03](./assets/printscreen-03.png)
+![04](./assets/printscreen-04.png)
+![05](./assets/printscreen-05.png)
 
 ## 📦 Tecnologias Utilizadas
 
@@ -42,7 +48,7 @@ sistemas distribuídos.
 - **Docker** + **Docker Compose**
 
 ## 🧪 Em desenvolvimento
-- **Trace Distribuído (Distributed Tracing)**
+- **Trace Distribuído**
 - **Logs Centralizados**
 - **Métricas e Monitoramento**
 - **Retry, Timeout e Circuit Breaker**

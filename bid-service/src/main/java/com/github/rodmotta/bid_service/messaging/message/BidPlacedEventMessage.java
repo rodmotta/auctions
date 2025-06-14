@@ -1,4 +1,4 @@
-package com.github.rodmotta.bid_service.messaging.model;
+package com.github.rodmotta.bid_service.messaging.message;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

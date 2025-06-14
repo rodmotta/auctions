@@ -1,26 +1,41 @@
-import { useNavigate } from 'react-router';
-import { formatCurrencyBR } from '../../../utils/formatterUtils';
+import { useNavigate } from "react-router";
+import { formatCurrencyBR, formatTimeRemaining } from "../../../utils/formatterUtils";
+import { Clock, Users } from "lucide-react";
 
 function AuctionCard({ auction }) {
     const navigate = useNavigate();
 
     return (
-        <div className="card  border border-stone-300 rounded-xl">
-            <figure>
+        <div className="card border border-base-200 shadow-md rounded-lg overflow-hidden">
+            <div className="w-full aspect-video overflow-hidden">
                 <img
-                    src="https://totenart.pt/blog/wp-content/uploads/2025/02/la-persistencia-de-la-memoria-dali-cuadro-arte-moderno-768x560.jpg"
-                    alt="" />
-            </figure>
-            <div className="card-body">
+                    className="w-full h-full object-cover"
+                    src="/placeholder.svg"
+                    alt={auction.title} />
+            </div>
+            <div className="card-body p-4">
                 <h2 className="card-title">{auction.title}</h2>
-                <p>{auction.description}</p>
-                <div className='flex justify-between'>
+                <div className="flex justify-between items-center">
                     <span>Preço atual: </span>
-                    <span className='text-xl font-bold text-green-600'>R$: {formatCurrencyBR(auction.currentPrice)}</span>
+                    <span className="text-xl font-bold text-green-600">R$: {formatCurrencyBR(auction.currentPrice)}</span>
                 </div>
-                <div className='flex justify-between'>
+                <div className="flex justify-between items-center">
                     <span>Preço inicial: </span>
-                    <span>R$: {formatCurrencyBR(auction.startingPrice)}</span>
+                    <span className="font-semibold">R$: {formatCurrencyBR(auction.startingPrice)}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                        <Users className="w-4 h-4" />
+                        <span>Lances:</span>
+                    </div>
+                    <span className="font-semibold">{auction.bidsCounter}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4" />
+                        <span>Tempo restante:</span>
+                    </div>
+                    <span className="font-semibold">{formatTimeRemaining(auction.endDate)}</span>
                 </div>
                 <div className="card-actions">
                     <button

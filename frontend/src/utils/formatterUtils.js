@@ -20,3 +20,20 @@ export function formatDateTimeBR(dateTime) {
 
   return date.toLocaleDateString('pt-BR', options);
 }
+
+export function formatTimeRemaining(deadline) {
+  const now = new Date();
+  const target = new Date(deadline);
+  let diffMs = target - now;
+
+  if (diffMs <= 0) return "Finalizado";
+
+  const minutes = Math.floor(diffMs / (1000 * 60)) % 60;
+  const hours = Math.floor(diffMs / (1000 * 60 * 60)) % 24;
+  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  if (days >= 1) {
+    return `${days}d ${hours}h`;
+  }
+  return `${hours}h ${minutes}m`;
+}

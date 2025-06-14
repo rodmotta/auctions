@@ -1,12 +1,12 @@
 package com.github.rodmotta.auction_service.service;
 
-import com.github.rodmotta.auction_service.security.User;
 import com.github.rodmotta.auction_service.dto.request.AuctionRequest;
 import com.github.rodmotta.auction_service.dto.response.AuctionResponse;
 import com.github.rodmotta.auction_service.exception.custom.NotFoundException;
 import com.github.rodmotta.auction_service.exception.custom.ValidationException;
 import com.github.rodmotta.auction_service.persistence.entity.AuctionEntity;
 import com.github.rodmotta.auction_service.persistence.repository.AuctionRepository;
+import com.github.rodmotta.auction_service.security.User;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -48,6 +48,8 @@ public class AuctionService {
     public void updateCurrentPriceEvent(Long auctionId, BigDecimal amount) {
         AuctionEntity auctionEntity = auctionRepository.findById(auctionId)
                 .orElseThrow(() -> new NotFoundException("Auction not found"));
+        Integer bidsCounter = auctionEntity.getBidsCounter();
+        auctionEntity.setBidsCounter(bidsCounter + 1);
         auctionEntity.setCurrentPrice(amount);
         auctionRepository.save(auctionEntity);
     }

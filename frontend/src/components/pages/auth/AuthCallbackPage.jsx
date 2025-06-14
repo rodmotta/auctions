@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router";
-import authStore from '../../../stores/authStore';
+import authStore from "../../../stores/authStore";
 
 function AuthCallbackPage() {
     const location = useLocation();
@@ -11,24 +11,25 @@ function AuthCallbackPage() {
 
     useEffect(() => {
         if (isAuthenticated) {
-            navigate('/');
+            navigate("/");
             return;
         }
 
         const urlParams = new URLSearchParams(location.search);
-        const code = urlParams.get('code');
+        const code = urlParams.get("code");
 
         if (code) {
             login(code);
-            navigate('/');
+            navigate("/");
         } else {
             console.error("Nenhum código de autenticação encontrado na URL.");
         }
     }, []);
 
     return (
-        <div>
-            Processando autenticação...
+        <div className="h-screen flex flex-col justify-center items-center gap-4">
+            <span className="loading loading-spinner loading-xl"></span>
+            <span>Processando autenticação...</span>
         </div>
     )
 }

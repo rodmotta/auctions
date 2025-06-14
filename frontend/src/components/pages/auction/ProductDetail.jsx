@@ -1,6 +1,6 @@
 function ProductDetail({ auction }) {
     return (
-        <div className='p-4 border border-stone-300 rounded-xl'>
+        <div className='p-4 border border-base-200 shadow-md rounded-lg'>
             <div>
                 <h1 className='text-3xl font-semibold'>{auction.title}</h1>
                 <p className='text-lg'>{auction.description}</p>

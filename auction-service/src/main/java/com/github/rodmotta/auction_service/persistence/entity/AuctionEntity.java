@@ -18,6 +18,7 @@ public class AuctionEntity {
     private BigDecimal startingPrice;
     private BigDecimal currentPrice;
     private BigDecimal minimumIncrement;
+    private Integer bidsCounter;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private String ownerId;
@@ -36,6 +37,7 @@ public class AuctionEntity {
         this.startingPrice = startingPrice;
         this.currentPrice = startingPrice;
         this.minimumIncrement = minimumIncrement;
+        this.bidsCounter = 0;
         this.startDate = startDate;
         this.endDate = endDate;
         this.createdAt = LocalDateTime.now();
@@ -95,6 +97,14 @@ public class AuctionEntity {
 
     public void setMinimumIncrement(BigDecimal minimumIncrement) {
         this.minimumIncrement = minimumIncrement;
+    }
+
+    public Integer getBidsCounter() {
+        return bidsCounter;
+    }
+
+    public void setBidsCounter(Integer bidsCounter) {
+        this.bidsCounter = bidsCounter;
     }
 
     public LocalDateTime getStartDate() {

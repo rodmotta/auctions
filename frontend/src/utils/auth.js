@@ -8,7 +8,8 @@ export const getKeycloakLoginUrl = () => {
     `?client_id=${clientId}` +
     `&response_type=code` +
     `&redirect_uri=${redirectUri}` +
-    `&scope=openid`;
+    `&scope=openid` +
+    `&prompt=login`;
 
   window.location.href = authUrl;
 };

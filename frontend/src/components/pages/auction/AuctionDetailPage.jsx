@@ -67,15 +67,40 @@ function AuctionDetailPage() {
     return (
         <div>
             <Navbar />
-            <div className='max-w-6xl m-auto mt-6'>
-                <div className='flex gap-4'>
+            <div className='max-w-6xl m-auto'>
+                <div className='flex flex-col md:flex-row gap-4 p-4'>
                     <div className='flex-2 flex flex-col gap-4'>
-                        <figure>
-                            <img
-                                className='rounded-lg'
-                                src="https://totenart.pt/blog/wp-content/uploads/2025/02/la-persistencia-de-la-memoria-dali-cuadro-arte-moderno-768x560.jpg" alt=""
-                            />
-                        </figure>
+                        <div className="p-4 border border-base-200 shadow-md rounded-lg">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <img
+                                    className='w-full object-cover rounded-lg'
+                                    src="/placeholder.svg"
+                                    alt=""
+                                />
+                                <div className="grid grid-cols-2 gap-4">
+                                    <img
+                                        src="/placeholder.svg"
+                                        alt=""
+                                        className="w-full object-cover rounded-lg"
+                                    />
+                                    <img
+                                        src="/placeholder.svg"
+                                        alt=""
+                                        className="w-full object-cover rounded-lg"
+                                    />
+                                    <img
+                                        src="/placeholder.svg"
+                                        alt=""
+                                        className="w-full object-cover rounded-lg"
+                                    />
+                                    <img
+                                        src="/placeholder.svg"
+                                        alt=""
+                                        className="w-full object-cover rounded-lg"
+                                    />
+                                </div>
+                            </div>
+                        </div>
                         <ProductDetail auction={auction} />
                     </div>
                     <div className='flex-1 flex flex-col gap-4'>

@@ -4,9 +4,10 @@ import com.github.rodmotta.auction_service.persistence.entity.AuctionEntity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public record AuctionResponse(
-        Long id,
+        UUID id,
         String title,
         String description,
         BigDecimal startingPrice,
@@ -15,7 +16,7 @@ public record AuctionResponse(
         Integer bidsCounter,
         LocalDateTime startDate,
         LocalDateTime endDate,
-        String ownerId,
+        UUID ownerId,
         String ownerName
 ) {
 

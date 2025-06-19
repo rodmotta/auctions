@@ -7,9 +7,10 @@ import org.springframework.data.jpa.repository.Lock;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
-public interface BidRepository extends JpaRepository<BidEntity, Long> {
+public interface BidRepository extends JpaRepository<BidEntity, UUID> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    Optional<BidEntity> findTopByAuctionIdOrderByAmountDesc(Long auctionId);
-    List<BidEntity> findTop5ByAuctionIdOrderByAmountDesc(Long auctionId);
+    Optional<BidEntity> findTopByAuctionIdOrderByAmountDesc(UUID auctionId);
+    List<BidEntity> findTop5ByAuctionIdOrderByAmountDesc(UUID auctionId);
 }

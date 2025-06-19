@@ -7,7 +7,7 @@ function PlaceBidForm({ auction }) {
     const { register, handleSubmit } = useForm();
 
     const submitPlaceBid = async (data) => {
-        const bidData = { ...data, auctionId: Number(auction.id) };
+        const bidData = { ...data, auctionId: auction.id };
         await placeBid(bidData);
     }
 

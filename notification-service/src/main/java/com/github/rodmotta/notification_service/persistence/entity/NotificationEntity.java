@@ -4,23 +4,24 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "notifications")
 public class NotificationEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private Long auctionId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+    private UUID auctionId;
     private String auctionTitle;
     private BigDecimal bidAmount;
-    private String notifiedId;
+    private UUID notifiedId;
     private LocalDateTime placedAt;
 
     public NotificationEntity() {
     }
 
-    public NotificationEntity(Long auctionId, String auctionTitle, BigDecimal bidAmount, String notifiedId, LocalDateTime placedAt) {
+    public NotificationEntity(UUID auctionId, String auctionTitle, BigDecimal bidAmount, UUID notifiedId, LocalDateTime placedAt) {
         this.auctionId = auctionId;
         this.auctionTitle = auctionTitle;
         this.bidAmount = bidAmount;
@@ -28,19 +29,19 @@ public class NotificationEntity {
         this.placedAt = placedAt;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
-    public Long getAuctionId() {
+    public UUID getAuctionId() {
         return auctionId;
     }
 
-    public void setAuctionId(Long auctionId) {
+    public void setAuctionId(UUID auctionId) {
         this.auctionId = auctionId;
     }
 
@@ -60,11 +61,11 @@ public class NotificationEntity {
         this.bidAmount = bidAmount;
     }
 
-    public String getNotifiedId() {
+    public UUID getNotifiedId() {
         return notifiedId;
     }
 
-    public void setNotifiedId(String notifiedId) {
+    public void setNotifiedId(UUID notifiedId) {
         this.notifiedId = notifiedId;
     }
 

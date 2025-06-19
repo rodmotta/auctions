@@ -10,6 +10,17 @@ spring:
           issuer-uri: http://localhost:8000/realms/auction-realm
 
 management:
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        include: "health, prometheus"
+  endpoint:
+    health:
+      enabled: true
+      show-details: always
+    prometheus:
+      enabled: true
   tracing:
     sampling:
       probability: 1.0

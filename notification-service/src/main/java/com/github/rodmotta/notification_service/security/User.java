@@ -1,4 +1,4 @@
-package com.github.rodmotta.auction_service.security;
+package com.github.rodmotta.notification_service.security;
 
 import java.util.UUID;
 

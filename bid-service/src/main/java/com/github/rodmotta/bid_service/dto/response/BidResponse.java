@@ -4,10 +4,11 @@ import com.github.rodmotta.bid_service.persistence.entity.BidEntity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public record BidResponse(
-        Long id,
-        Long auctionId,
+        UUID id,
+        UUID auctionId,
         String bidderName,
         BigDecimal amount,
         LocalDateTime timestamp

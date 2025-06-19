@@ -23,8 +23,13 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+// Spring Boot Actuator - expõe métricas e endpoints de saúde
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+// Prometheus Exporter - expõe métricas no formato Prometheus
+	implementation 'io.micrometer:micrometer-registry-prometheus'
+// Micrometer Tracing com Brave - fornece suporte de tracing (substitui Sleuth)
 	implementation 'io.micrometer:micrometer-tracing-bridge-brave'
+// Zipkin Exporter - envia spans para o servidor Zipkin
 	implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
 	runtimeOnly 'org.postgresql:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

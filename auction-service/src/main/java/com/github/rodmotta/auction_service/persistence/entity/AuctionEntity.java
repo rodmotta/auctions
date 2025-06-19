@@ -4,14 +4,15 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "auctions")
 public class AuctionEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     private String title;
     private String description;
     private String imageUrl;
@@ -21,9 +22,9 @@ public class AuctionEntity {
     private Integer bidsCounter;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private String ownerId;
+    private UUID ownerId;
     private String ownerName;
-    private String winnerId;
+    private UUID winnerId;
     private String winnerName;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -43,11 +44,11 @@ public class AuctionEntity {
         this.createdAt = LocalDateTime.now();
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -123,11 +124,11 @@ public class AuctionEntity {
         this.endDate = endDate;
     }
 
-    public String getOwnerId() {
+    public UUID getOwnerId() {
         return ownerId;
     }
 
-    public void setOwnerId(String ownerId) {
+    public void setOwnerId(UUID ownerId) {
         this.ownerId = ownerId;
     }
 
@@ -139,11 +140,11 @@ public class AuctionEntity {
         this.ownerName = ownerName;
     }
 
-    public String getWinnerId() {
+    public UUID getWinnerId() {
         return winnerId;
     }
 
-    public void setWinnerId(String winnerId) {
+    public void setWinnerId(UUID winnerId) {
         this.winnerId = winnerId;
     }
 

@@ -4,10 +4,11 @@ import com.github.rodmotta.notification_service.persistence.entity.NotificationE
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public record NotificationResponse(
-        Long id,
-        Long auctionId,
+        UUID id,
+        UUID auctionId,
         String auctionTitle,
         BigDecimal bidAmount,
         LocalDateTime placedAt

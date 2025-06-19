@@ -4,21 +4,22 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "bids")
 public class BidEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private Long auctionId;
-    private String userId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+    private UUID auctionId;
+    private UUID userId;
     private String userName;
     private BigDecimal amount;
     private LocalDateTime createdAt;
 
-    public BidEntity(Long auctionId, BigDecimal amount) {
+    public BidEntity(UUID auctionId, BigDecimal amount) {
         this.auctionId = auctionId;
         this.amount = amount;
     }
@@ -26,27 +27,27 @@ public class BidEntity {
     public BidEntity() {
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
-    public Long getAuctionId() {
+    public UUID getAuctionId() {
         return auctionId;
     }
 
-    public void setAuctionId(Long auctionId) {
+    public void setAuctionId(UUID auctionId) {
         this.auctionId = auctionId;
     }
 
-    public String getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 

@@ -2,7 +2,8 @@ package com.github.rodmotta.bid_service.controller;
 
 import com.github.rodmotta.bid_service.dto.request.BidRequest;
 import com.github.rodmotta.bid_service.dto.response.BidResponse;
-import com.github.rodmotta.bid_service.dto.response.UserResponse;
+import com.github.rodmotta.bid_service.security.JWTUtils;
+import com.github.rodmotta.bid_service.security.User;
 import com.github.rodmotta.bid_service.service.BidService;
 import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -10,7 +11,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -28,13 +29,13 @@ public class BidController {
     @ResponseStatus(CREATED)
     public void placeBid(@RequestBody @Valid BidRequest bidRequest,
                          @AuthenticationPrincipal Jwt jwt) {
-        var user = new UserResponse(jwt);
+        User user = JWTUtils.extractUser(jwt);
         bidService.placeBid(bidRequest, user);
     }
 
     @GetMapping("/auction/{auctionId}")
     @ResponseStatus(OK)
-    public List<BidResponse> getBidsByAuction(@PathVariable Long auctionId) {
+    public List<BidResponse> getBidsByAuction(@PathVariable UUID auctionId) {
         return bidService.getBidsByAuction(auctionId);
     }
 }

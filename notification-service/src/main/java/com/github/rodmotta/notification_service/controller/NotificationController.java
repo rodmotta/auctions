@@ -1,6 +1,8 @@
 package com.github.rodmotta.notification_service.controller;
 
 import com.github.rodmotta.notification_service.dto.response.NotificationResponse;
+import com.github.rodmotta.notification_service.security.JWTUtils;
+import com.github.rodmotta.notification_service.security.User;
 import com.github.rodmotta.notification_service.service.NotificationService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -21,7 +23,7 @@ public class NotificationController {
 
     @GetMapping
     public List<NotificationResponse> findByUserId(@AuthenticationPrincipal Jwt jwt) {
-        String userId = jwt.getSubject();
-        return notificationService.findByUserId(userId);
+        User user = JWTUtils.extractUser(jwt);
+        return notificationService.findByUserId(user.id());
     }
 }

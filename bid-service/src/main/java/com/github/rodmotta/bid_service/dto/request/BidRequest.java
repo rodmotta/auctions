@@ -5,10 +5,11 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public record BidRequest(
         @NotNull
-        Long auctionId,
+        UUID auctionId,
         @NotNull
         @Positive
         BigDecimal amount

@@ -43,7 +43,7 @@ function AuctionDetailPage() {
 
     const connectWebSocket = () => {
         const stompClient = new Client({
-            brokerURL: 'ws://localhost:8082/ws',
+            brokerURL: 'ws://localhost:8080/ws',
             reconnectDelay: 5000,
             onConnect: () => {
                 stompClient.subscribe(`/topic/auction/${id}/bids`, message => {

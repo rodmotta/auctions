@@ -31,6 +31,10 @@ function BidPanel({ auction, highestBid }) {
             <div className="divider"></div>
             <div>
                 <div className="flex justify-between">
+                    <p className="text-gray-500">Inicia em:</p>
+                    <p className="font-semibold">{formatDateTimeBR(auction.startDate)}</p>
+                </div>
+                <div className="flex justify-between">
                     <p className="text-gray-500">Termina em:</p>
                     <p className="font-semibold">{formatDateTimeBR(auction.endDate)}</p>
                 </div>

@@ -41,7 +41,7 @@ public class AuctionController {
 
     @GetMapping("{id}")
     @ResponseStatus(OK)
-        public AuctionResponse getAuctionById(@PathVariable UUID id) {
+    public AuctionResponse getAuctionById(@PathVariable UUID id) {
         return auctionService.findById(id);
     }
 }

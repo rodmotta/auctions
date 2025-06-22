@@ -1,4 +1,4 @@
-package com.github.rodmotta.bid_service.middleware;
+package com.github.rodmotta.bid_service.config.middleware;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;

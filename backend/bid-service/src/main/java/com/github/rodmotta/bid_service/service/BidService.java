@@ -5,7 +5,7 @@ import com.github.rodmotta.bid_service.dto.request.BidRequest;
 import com.github.rodmotta.bid_service.dto.response.AuctionResponse;
 import com.github.rodmotta.bid_service.dto.response.BidResponse;
 import com.github.rodmotta.bid_service.exception.custom.ValidationException;
-import com.github.rodmotta.bid_service.messaging.publisher.BidEventPublisher;
+import com.github.rodmotta.bid_service.messaging.RabbitProducer;
 import com.github.rodmotta.bid_service.persistence.entity.BidEntity;
 import com.github.rodmotta.bid_service.persistence.repository.BidRepository;
 import com.github.rodmotta.bid_service.security.User;
@@ -21,18 +21,21 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.github.rodmotta.bid_service.enums.AuctionStatus.COMPLETED;
+import static com.github.rodmotta.bid_service.enums.AuctionStatus.PENDING;
+
 @Service
 public class BidService {
     private final Logger logger = LoggerFactory.getLogger(BidService.class);
     private final AuctionClient auctionClient;
     private final BidRepository bidRepository;
-    private final BidEventPublisher bidEventPublisher;
+    private final RabbitProducer rabbitProducer;
     private final SimpMessagingTemplate messagingTemplate;
 
-    public BidService(AuctionClient auctionClient, BidRepository bidRepository, BidEventPublisher bidEventPublisher, SimpMessagingTemplate messagingTemplate) {
+    public BidService(AuctionClient auctionClient, BidRepository bidRepository, RabbitProducer rabbitProducer, SimpMessagingTemplate messagingTemplate) {
         this.auctionClient = auctionClient;
         this.bidRepository = bidRepository;
-        this.bidEventPublisher = bidEventPublisher;
+        this.rabbitProducer = rabbitProducer;
         this.messagingTemplate = messagingTemplate;
     }
 
@@ -78,7 +81,7 @@ public class BidService {
                 .map(BidEntity::getUserId)
                 .orElse(null);
 
-        bidEventPublisher.placeBid(newBid, auction, user, previousBidderId, now);
+        rabbitProducer.publishBidPlacedEvent(newBid, auction, user.id(), previousBidderId, now);
 
         notifyTopBids(newBid.getAuctionId());
     }
@@ -95,6 +98,15 @@ public class BidService {
 
     private void validateAuction(User user, AuctionResponse auction, LocalDateTime now) {
         logger.debug("Starting auction validation for auction ID {} by user {}.", auction.id(), user.id());
+
+        if (auction.status().equals(PENDING)) {
+            throw new ValidationException("The auction has not started");
+        }
+
+        if (auction.status().equals(COMPLETED)) {
+            throw new ValidationException("The auction has ended");
+        }
+
         if (auction.ownerId().equals(user.id())) {
             throw new ValidationException("The auction owner cannot bid");
         }
@@ -110,5 +122,14 @@ public class BidService {
         List<BidResponse> topBids = getBidsByAuction(auctionId);
         messagingTemplate.convertAndSend("/topic/auction/" + auctionId + "/bids", topBids);
         logger.debug("Top bids notification sent for auction ID {}.", auctionId);
+    }
+
+    @Transactional
+    public void notifyHighestBid(UUID auctionId, String auctionTitle) {
+        BidEntity highestBid = bidRepository.findTopByAuctionIdOrderByAmountDesc(auctionId)
+                .orElseThrow(() -> new ValidationException("No bids found for this auction"));
+
+        logger.info("Notifying winner for auction ID {}. Winner ID: {}", auctionId, highestBid.getUserId());
+        rabbitProducer.publishAuctionWinnerEvent(auctionId, auctionTitle, highestBid.getUserId(), highestBid.getUserName());
     }
 }

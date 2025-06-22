@@ -1,5 +1,6 @@
 package com.github.rodmotta.notification_service.persistence.entity;
 
+import com.github.rodmotta.notification_service.enums.NotificationTypeEnum;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -17,16 +18,19 @@ public class NotificationEntity {
     private BigDecimal bidAmount;
     private UUID notifiedId;
     private LocalDateTime placedAt;
+    @Enumerated(EnumType.STRING)
+    private NotificationTypeEnum type;
 
     public NotificationEntity() {
     }
 
-    public NotificationEntity(UUID auctionId, String auctionTitle, BigDecimal bidAmount, UUID notifiedId, LocalDateTime placedAt) {
+    public NotificationEntity(UUID auctionId, String auctionTitle, BigDecimal bidAmount, UUID notifiedId, LocalDateTime placedAt, NotificationTypeEnum type) {
         this.auctionId = auctionId;
         this.auctionTitle = auctionTitle;
         this.bidAmount = bidAmount;
         this.notifiedId = notifiedId;
         this.placedAt = placedAt;
+        this.type = type;
     }
 
     public UUID getId() {
@@ -75,5 +79,13 @@ public class NotificationEntity {
 
     public void setPlacedAt(LocalDateTime placedAt) {
         this.placedAt = placedAt;
+    }
+
+    public NotificationTypeEnum getType() {
+        return type;
+    }
+
+    public void setType(NotificationTypeEnum type) {
+        this.type = type;
     }
 }

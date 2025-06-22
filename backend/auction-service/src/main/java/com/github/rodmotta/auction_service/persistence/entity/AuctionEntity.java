@@ -1,5 +1,6 @@
 package com.github.rodmotta.auction_service.persistence.entity;
 
+import com.github.rodmotta.auction_service.enums.AuctionStatus;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -15,13 +16,14 @@ public class AuctionEntity {
     private UUID id;
     private String title;
     private String description;
-    private String imageUrl;
     private BigDecimal startingPrice;
     private BigDecimal currentPrice;
     private BigDecimal minimumIncrement;
     private Integer bidsCounter;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
+    @Enumerated(EnumType.STRING)
+    private AuctionStatus status;
     private UUID ownerId;
     private String ownerName;
     private UUID winnerId;
@@ -41,6 +43,7 @@ public class AuctionEntity {
         this.bidsCounter = 0;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.status = AuctionStatus.PENDING;
         this.createdAt = LocalDateTime.now();
     }
 
@@ -66,14 +69,6 @@ public class AuctionEntity {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 
     public BigDecimal getStartingPrice() {
@@ -122,6 +117,14 @@ public class AuctionEntity {
 
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
+    }
+
+    public AuctionStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(AuctionStatus status) {
+        this.status = status;
     }
 
     public UUID getOwnerId() {

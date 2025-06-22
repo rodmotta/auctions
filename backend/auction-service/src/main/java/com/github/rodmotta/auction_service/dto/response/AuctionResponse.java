@@ -1,5 +1,6 @@
 package com.github.rodmotta.auction_service.dto.response;
 
+import com.github.rodmotta.auction_service.enums.AuctionStatus;
 import com.github.rodmotta.auction_service.persistence.entity.AuctionEntity;
 
 import java.math.BigDecimal;
@@ -16,6 +17,7 @@ public record AuctionResponse(
         Integer bidsCounter,
         LocalDateTime startDate,
         LocalDateTime endDate,
+        AuctionStatus status,
         UUID ownerId,
         String ownerName
 ) {
@@ -31,6 +33,7 @@ public record AuctionResponse(
                 auctionEntity.getBidsCounter(),
                 auctionEntity.getStartDate(),
                 auctionEntity.getEndDate(),
+                auctionEntity.getStatus(),
                 auctionEntity.getOwnerId(),
                 auctionEntity.getOwnerName()
         );

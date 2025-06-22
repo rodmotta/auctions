@@ -1,5 +1,6 @@
 package com.github.rodmotta.notification_service.dto.response;
 
+import com.github.rodmotta.notification_service.enums.NotificationTypeEnum;
 import com.github.rodmotta.notification_service.persistence.entity.NotificationEntity;
 
 import java.math.BigDecimal;
@@ -11,7 +12,8 @@ public record NotificationResponse(
         UUID auctionId,
         String auctionTitle,
         BigDecimal bidAmount,
-        LocalDateTime placedAt
+        LocalDateTime placedAt,
+        NotificationTypeEnum type
 ) {
     public NotificationResponse(NotificationEntity notificationEntity) {
         this(
@@ -19,7 +21,8 @@ public record NotificationResponse(
                 notificationEntity.getAuctionId(),
                 notificationEntity.getAuctionTitle(),
                 notificationEntity.getBidAmount(),
-                notificationEntity.getPlacedAt()
+                notificationEntity.getPlacedAt(),
+                notificationEntity.getType()
         );
     }
 }

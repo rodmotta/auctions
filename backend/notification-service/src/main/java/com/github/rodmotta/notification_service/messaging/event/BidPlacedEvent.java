@@ -1,10 +1,10 @@
-package com.github.rodmotta.notification_service.messaging.model;
+package com.github.rodmotta.notification_service.messaging.event;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record BidPlacedEventMessage(
+public record BidPlacedEvent(
         UUID auctionId,
         String auctionTitle,
         BigDecimal bidAmount,

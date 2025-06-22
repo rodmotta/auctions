@@ -1,4 +1,4 @@
-package com.github.rodmotta.notification_service.middleware;
+package com.github.rodmotta.notification_service.config.middleware;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;

@@ -2,26 +2,35 @@ package com.github.rodmotta.auction_service.service;
 
 import com.github.rodmotta.auction_service.dto.request.AuctionRequest;
 import com.github.rodmotta.auction_service.dto.response.AuctionResponse;
+import com.github.rodmotta.auction_service.enums.AuctionStatus;
 import com.github.rodmotta.auction_service.exception.custom.NotFoundException;
 import com.github.rodmotta.auction_service.exception.custom.ValidationException;
+import com.github.rodmotta.auction_service.messaging.RabbitProducer;
 import com.github.rodmotta.auction_service.persistence.entity.AuctionEntity;
 import com.github.rodmotta.auction_service.persistence.repository.AuctionRepository;
 import com.github.rodmotta.auction_service.security.User;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+
+import static com.github.rodmotta.auction_service.enums.AuctionStatus.*;
 
 @Service
 public class AuctionService {
     private final Logger logger = LoggerFactory.getLogger(AuctionService.class);
     private final AuctionRepository auctionRepository;
+    private final RabbitProducer rabbitProducer;
 
-    public AuctionService(AuctionRepository auctionRepository) {
+    public AuctionService(AuctionRepository auctionRepository, RabbitProducer rabbitProducer) {
         this.auctionRepository = auctionRepository;
+        this.rabbitProducer = rabbitProducer;
     }
 
     public void create(AuctionRequest auctionRequest, User owner) {
@@ -76,5 +85,54 @@ public class AuctionService {
         auctionRepository.save(auctionEntity);
         logger.info("Successfully updated current price for auction ID {} to {}. Bid count: {}",
                 auctionId, amount, auctionEntity.getBidsCounter());
+    }
+
+    @Scheduled(fixedRate = 60000)
+    @Transactional
+    public void activateScheduledAuctions() {
+        logger.info("Verifying auctions to activate...");
+        LocalDateTime now = LocalDateTime.now();
+        List<AuctionEntity> auctionsToActivate = auctionRepository.findByStatusAndStartDateBefore(PENDING, now);
+
+        if (!auctionsToActivate.isEmpty()) {
+            for (AuctionEntity auction : auctionsToActivate) {
+                auction.setStatus(ACTIVE);
+                auctionRepository.save(auction);
+            }
+            logger.info("{} auctions activated.", auctionsToActivate.size());
+            return;
+        }
+        logger.info("No auctions to activate at the moment.");
+    }
+
+    @Scheduled(fixedRate = 60000)
+    @Transactional
+    public void concludeExpiredAuctions() {
+        logger.info("Verifying auctions to conclude...");
+        LocalDateTime now = LocalDateTime.now();
+
+        List<AuctionEntity> auctionsToConclude = auctionRepository.findByStatusAndEndDateBefore(ACTIVE, now);
+
+        if (!auctionsToConclude.isEmpty()) {
+            for (AuctionEntity auction : auctionsToConclude) {
+                auction.setStatus(COMPLETED);
+                auctionRepository.save(auction);
+                rabbitProducer.publishAuctionFinalizedEvent(auction.getId(), auction.getTitle());
+            }
+            logger.info("{} auctions concluded.", auctionsToConclude.size());
+            return;
+        }
+        logger.info("No auctions to conclude at the moment.");
+    }
+
+    public void updateAuctionWinnerEvent(UUID auctionId, UUID winnerId, String winnerName) {
+        logger.info("Updating winner for auction ID {}: winnerId: {}", auctionId, winnerId);
+        AuctionEntity auctionEntity = auctionRepository.findById(auctionId)
+                .orElseThrow(() -> new NotFoundException("Auction not found"));
+
+        auctionEntity.setWinnerId(winnerId);
+        auctionEntity.setWinnerName(winnerName);
+
+        auctionRepository.save(auctionEntity);
     }
 }

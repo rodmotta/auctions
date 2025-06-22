@@ -1,7 +1,8 @@
 package com.github.rodmotta.notification_service.service;
 
 import com.github.rodmotta.notification_service.dto.response.NotificationResponse;
-import com.github.rodmotta.notification_service.messaging.model.BidPlacedEventMessage;
+import com.github.rodmotta.notification_service.messaging.event.AuctionWinnerEvent;
+import com.github.rodmotta.notification_service.messaging.event.BidPlacedEvent;
 import com.github.rodmotta.notification_service.persistence.entity.NotificationEntity;
 import com.github.rodmotta.notification_service.persistence.repository.NotificationRepository;
 import org.slf4j.Logger;
@@ -9,8 +10,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+
+import static com.github.rodmotta.notification_service.enums.NotificationTypeEnum.OUTBID;
+import static com.github.rodmotta.notification_service.enums.NotificationTypeEnum.WINNER;
 
 @Service
 public class NotificationService {
@@ -23,7 +28,7 @@ public class NotificationService {
         this.messagingTemplate = messagingTemplate;
     }
 
-    public void saveNotification(BidPlacedEventMessage message) {
+    public void saveOutbidNotification(BidPlacedEvent message) {
 
         logger.info("Attempting to save notification for bid on auction ID {} by bidder {}. Previous bidder: {}",
                 message.auctionId(), message.bidderId(), message.previousBidderId());
@@ -38,14 +43,29 @@ public class NotificationService {
                 message.auctionTitle(),
                 message.bidAmount(),
                 message.previousBidderId(),
-                message.placedAt());
-        logger.debug("Saving new notification for user {}. Auction ID: {}, Amount: {}",
-                notification.getNotifiedId(), notification.getAuctionId(), notification.getBidAmount());
-        notificationRepository.save(notification);
-        logger.info("Successfully saved notification for user {}. Notification ID: {}, Auction ID: {}",
-                notification.getNotifiedId(), notification.getId(), notification.getAuctionId());
+                message.placedAt(),
+                OUTBID);
 
-        notify(notification.getNotifiedId());
+        logger.info("Saving outbid notification for auction ID {}, winner ID: {}", notification.getNotifiedId(), notification.getAuctionId());
+        notificationRepository.save(notification);
+
+        notifyUserNotifications(notification.getNotifiedId());
+    }
+
+    public void saveWinnerNotification(AuctionWinnerEvent message) {
+
+        NotificationEntity notification = new NotificationEntity(
+                message.auctionId(),
+                message.auctionTitle(),
+                null,
+                message.winnerId(),
+                LocalDateTime.now(),
+                WINNER);
+
+        logger.info("Saving winner notification for auction ID {}, winner ID: {}", message.auctionId(), message.winnerId());
+        notificationRepository.save(notification);
+
+        notifyUserNotifications(notification.getNotifiedId());
     }
 
     public List<NotificationResponse> findByUserId(UUID userId) {
@@ -55,7 +75,7 @@ public class NotificationService {
                 .toList();
     }
 
-    private void notify(UUID userId) {
+    private void notifyUserNotifications(UUID userId) {
         logger.debug("Notifying user {} via WebSocket for new notification.", userId);
         List<NotificationResponse> notifications = findByUserId(userId);
         messagingTemplate.convertAndSend("/topic/notifications/" + userId, notifications);

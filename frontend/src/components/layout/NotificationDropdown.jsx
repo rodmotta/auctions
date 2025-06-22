@@ -52,16 +52,29 @@ function NotificationDropdown() {
                                             className="p-4 bg-base-200 rounded-lg cursor-pointer"
                                             onClick={() => navigate(`/auction/${notification.auctionId}`)}
                                         >
-                                            <div className="flex items-start gap-2">
-                                                <span className="text-xl">🔨</span>
-                                                <div className="flex-1">
-                                                    <p className="font-semibold">{`Você foi superado por um novo lance de R$ ${formatCurrencyBR(notification.bidAmount)}`}</p>
-                                                    <div className="flex justify-between items-center mt-1 text-xs text-gray-400">
-                                                        <span>{notification.auctionTitle}</span>
-                                                        <span>{formatDateTimeBR(notification.placedAt)}</span>
+                                            {notification.type === "WINNER" ? (
+                                                <div className="flex items-start gap-2">
+                                                    <span className="text-xl">🥇</span>
+                                                    <div className="flex-1">
+                                                        <p className="font-semibold">{`Você venceu o leilão!`}</p>
+                                                        <div className="flex justify-between items-center mt-1 text-xs text-gray-400">
+                                                            <span>{notification.auctionTitle}</span>
+                                                            <span>{formatDateTimeBR(notification.placedAt)}</span>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            ) : (
+                                                <div className="flex items-start gap-2">
+                                                    <span className="text-xl">🔨</span>
+                                                    <div className="flex-1">
+                                                        {/* <p className="font-semibold">{`Você foi superado por um novo lance de R$ ${formatCurrencyBR(notification.bidAmount)}`}</p> */}
+                                                        <div className="flex justify-between items-center mt-1 text-xs text-gray-400">
+                                                            <span>{notification.auctionTitle}</span>
+                                                            <span>{formatDateTimeBR(notification.placedAt)}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
                                     ))}
                                 </div>

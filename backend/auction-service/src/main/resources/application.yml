@@ -17,6 +17,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+#    properties:
+#      hibernate:
+#        format_sql: true
+#      show-sql: true
   rabbitmq:
     host: localhost
     port: 5672

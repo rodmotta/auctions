@@ -25,12 +25,14 @@ public class GlobalExceptionHandler {
         Map<String, String> validations = new HashMap<>();
         e.getBindingResult().getFieldErrors().forEach(error ->
                 validations.put(error.getField(), error.getDefaultMessage()));
+        logger.error("A validation error occurred: {}", e.getMessage());
         return new ErrorResponse("Validation error", validations);
     }
 
     @ResponseStatus(BAD_REQUEST)
     @ExceptionHandler({ValidationException.class, NotFoundException.class})
     public ErrorResponse badRequestExceptionHandler(RuntimeException e) {
+        logger.error("A business error occurred: {}", e.getMessage());
         return new ErrorResponse(e.getMessage());
     }
 
@@ -38,6 +40,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ErrorResponse internalServerErrorExceptionHandler(Exception e) {
         logger.error("An unexpected internal error occurred: {}", e.getMessage());
-        return new ErrorResponse("An unexpected error occurred. Please try again later.");
+        return new ErrorResponse("An unexpected error occurred. Please try again later");
     }
 }

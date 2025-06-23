@@ -1,5 +1,6 @@
 package com.github.rodmotta.auction_service.dto.request;
 
+import com.github.rodmotta.auction_service.exception.custom.ValidationException;
 import com.github.rodmotta.auction_service.persistence.entity.AuctionEntity;
 import jakarta.validation.constraints.*;
 
@@ -26,6 +27,7 @@ public record AuctionRequest(
         LocalDateTime endDate
 ) {
     public AuctionEntity toEntity() {
+        assertValidPeriod();
         return new AuctionEntity(
                 title,
                 description,
@@ -34,5 +36,11 @@ public record AuctionRequest(
                 startDate,
                 endDate
         );
+    }
+
+    private void assertValidPeriod() {
+        if (startDate.isAfter(endDate)) {
+            throw new ValidationException("Start date must be before end date");
+        }
     }
 }

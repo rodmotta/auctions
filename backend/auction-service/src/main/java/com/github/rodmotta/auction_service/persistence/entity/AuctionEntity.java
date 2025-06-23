@@ -47,6 +47,10 @@ public class AuctionEntity {
         this.createdAt = LocalDateTime.now();
     }
 
+    public void incrementBidsCounter() {
+        this.bidsCounter++;
+    }
+
     public UUID getId() {
         return id;
     }

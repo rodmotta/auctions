@@ -1,12 +1,11 @@
 package com.github.rodmotta.auction_service.messaging;
 
 import com.github.rodmotta.auction_service.messaging.event.AuctionFinalizedEvent;
+import com.github.rodmotta.auction_service.persistence.entity.AuctionEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
-
-import java.util.UUID;
 
 import static com.github.rodmotta.auction_service.config.RabbitConfig.AUCTION_EVENTS_TOPIC;
 
@@ -19,9 +18,8 @@ public class RabbitProducer {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    public void publishAuctionFinalizedEvent(UUID auctionId, String auctionTitle) {
-        var message = new AuctionFinalizedEvent(auctionId, auctionTitle);
-        logger.info("Publishing message for '{}': '{}'.", AUCTION_EVENTS_TOPIC, message);
+    public void publishFinalizedAuctionsEvent(AuctionEntity auction) {
+        var message = new AuctionFinalizedEvent(auction);
         rabbitTemplate.convertAndSend(AUCTION_EVENTS_TOPIC, "auction.finalized", message);
     }
 }

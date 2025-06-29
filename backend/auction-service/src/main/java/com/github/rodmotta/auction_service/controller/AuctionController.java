@@ -4,8 +4,11 @@ import com.github.rodmotta.auction_service.dto.request.AuctionRequest;
 import com.github.rodmotta.auction_service.dto.response.AuctionResponse;
 import com.github.rodmotta.auction_service.security.JWTUtils;
 import com.github.rodmotta.auction_service.security.User;
-import com.github.rodmotta.auction_service.service.AuctionService;
+import com.github.rodmotta.auction_service.usecase.CreateAuctionUseCase;
+import com.github.rodmotta.auction_service.usecase.GetAuctionByIdUseCase;
+import com.github.rodmotta.auction_service.usecase.GetAuctionsUseCase;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
@@ -18,30 +21,29 @@ import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("auctions")
+@RequiredArgsConstructor
 public class AuctionController {
-    private final AuctionService auctionService;
-
-    public AuctionController(AuctionService auctionService) {
-        this.auctionService = auctionService;
-    }
+    private final CreateAuctionUseCase createAuctionUseCase;
+    private final GetAuctionsUseCase getAuctionsUseCase;
+    private final GetAuctionByIdUseCase getAuctionByIdUseCase;
 
     @PostMapping
     @ResponseStatus(CREATED)
     public void createAuction(@RequestBody @Valid AuctionRequest auctionRequest,
                               @AuthenticationPrincipal Jwt jwt) {
         User loggedUser = JWTUtils.extractUser(jwt);
-        auctionService.create(auctionRequest, loggedUser);
+        createAuctionUseCase.execute(auctionRequest, loggedUser);
     }
 
     @GetMapping
     @ResponseStatus(OK)
     public List<AuctionResponse> getAllAuctions() {
-        return auctionService.findAll();
+        return getAuctionsUseCase.execute();
     }
 
     @GetMapping("{id}")
     @ResponseStatus(OK)
     public AuctionResponse getAuctionById(@PathVariable UUID id) {
-        return auctionService.findById(id);
+        return getAuctionByIdUseCase.execute(id);
     }
 }

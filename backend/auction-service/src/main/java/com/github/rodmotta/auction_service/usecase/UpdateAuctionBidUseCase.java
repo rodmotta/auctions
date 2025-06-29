@@ -1,26 +1,25 @@
-package com.github.rodmotta.auction_service.service;
+package com.github.rodmotta.auction_service.usecase;
 
 import com.github.rodmotta.auction_service.exception.custom.NotFoundException;
 import com.github.rodmotta.auction_service.persistence.entity.AuctionEntity;
 import com.github.rodmotta.auction_service.persistence.repository.AuctionRepository;
-import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
-@Service
-public class UpdateAuctionWinner {
+@Component
+@RequiredArgsConstructor
+public class UpdateAuctionBidUseCase {
     private final AuctionRepository auctionRepository;
 
-    public UpdateAuctionWinner(AuctionRepository auctionRepository) {
-        this.auctionRepository = auctionRepository;
-    }
-
-    public void execute(UUID auctionId, UUID winnerId, String winnerName) {
+    public void execute(UUID auctionId, BigDecimal amount) {
         AuctionEntity auctionEntity = auctionRepository.findById(auctionId)
                 .orElseThrow(() -> new NotFoundException("Auction not found"));
 
-        auctionEntity.setWinnerId(winnerId);
-        auctionEntity.setWinnerName(winnerName);
+        auctionEntity.incrementBidsCounter();
+        auctionEntity.setCurrentPrice(amount);
         auctionRepository.save(auctionEntity);
     }
 }

@@ -15,7 +15,6 @@ import java.util.UUID;
         @Index(name = "idx_auction_id", columnList = "auction_id")
 })
 public class BidEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;

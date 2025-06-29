@@ -1,23 +1,21 @@
-package com.github.rodmotta.notification_service.service;
+package com.github.rodmotta.notification_service.usecase;
 
 import com.github.rodmotta.notification_service.messaging.event.AuctionWinnerEvent;
 import com.github.rodmotta.notification_service.persistence.entity.NotificationEntity;
 import com.github.rodmotta.notification_service.persistence.repository.NotificationRepository;
-import org.springframework.stereotype.Service;
+import com.github.rodmotta.notification_service.websocker.NotifyNotificationWebSocket;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
 import static com.github.rodmotta.notification_service.enums.NotificationTypeEnum.WINNER;
 
-@Service
-public class WinnerNotification {
+@Component
+@RequiredArgsConstructor
+public class CreateWinnerNotificationUseCase {
     private final NotificationRepository notificationRepository;
-    private final NotifyWebSocket notifyWebSocket;
-
-    public WinnerNotification(NotificationRepository notificationRepository, NotifyWebSocket notifyWebSocket) {
-        this.notificationRepository = notificationRepository;
-        this.notifyWebSocket = notifyWebSocket;
-    }
+    private final NotifyNotificationWebSocket notifyNotificationWebSocket;
 
     public void execute(AuctionWinnerEvent message) {
 
@@ -32,6 +30,6 @@ public class WinnerNotification {
 //        logger.info("Saving winner notification for auction ID {}, winner ID: {}", message.auctionId(), message.winnerId());
         notificationRepository.save(notification);
 
-        notifyWebSocket.notifyUserNotifications(notification.getNotifiedId());
+        notifyNotificationWebSocket.execute(notification.getNotifiedId());
     }
 }

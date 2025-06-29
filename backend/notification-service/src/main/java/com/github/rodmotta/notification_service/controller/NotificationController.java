@@ -3,7 +3,8 @@ package com.github.rodmotta.notification_service.controller;
 import com.github.rodmotta.notification_service.dto.response.NotificationResponse;
 import com.github.rodmotta.notification_service.security.JWTUtils;
 import com.github.rodmotta.notification_service.security.User;
-import com.github.rodmotta.notification_service.service.NotificationService;
+import com.github.rodmotta.notification_service.usecase.GetNotificationsByUserId;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,16 +15,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("notifications")
+@RequiredArgsConstructor
 public class NotificationController {
-    private final NotificationService notificationService;
-
-    public NotificationController(NotificationService notificationService) {
-        this.notificationService = notificationService;
-    }
+    private final GetNotificationsByUserId getNotificationsByUserId;
 
     @GetMapping
     public List<NotificationResponse> findByUserId(@AuthenticationPrincipal Jwt jwt) {
         User user = JWTUtils.extractUser(jwt);
-        return notificationService.findByUserId(user.id());
+        return getNotificationsByUserId.execute(user.id());
     }
 }

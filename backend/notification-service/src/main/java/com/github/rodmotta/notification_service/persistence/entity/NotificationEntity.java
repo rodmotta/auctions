@@ -2,27 +2,32 @@ package com.github.rodmotta.notification_service.persistence.entity;
 
 import com.github.rodmotta.notification_service.enums.NotificationTypeEnum;
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Data
+@NoArgsConstructor
 @Entity
-@Table(name = "notifications")
+@Table(name = "notifications", indexes = {
+        @Index(name = "idx_notified_id", columnList = "notified_id")
+})
 public class NotificationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+    @Column(nullable = false)
     private UUID auctionId;
     private String auctionTitle;
     private BigDecimal bidAmount;
+    @Column(nullable = false)
     private UUID notifiedId;
     private LocalDateTime placedAt;
     @Enumerated(EnumType.STRING)
     private NotificationTypeEnum type;
-
-    public NotificationEntity() {
-    }
 
     public NotificationEntity(UUID auctionId, String auctionTitle, BigDecimal bidAmount, UUID notifiedId, LocalDateTime placedAt, NotificationTypeEnum type) {
         this.auctionId = auctionId;
@@ -30,62 +35,6 @@ public class NotificationEntity {
         this.bidAmount = bidAmount;
         this.notifiedId = notifiedId;
         this.placedAt = placedAt;
-        this.type = type;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public UUID getAuctionId() {
-        return auctionId;
-    }
-
-    public void setAuctionId(UUID auctionId) {
-        this.auctionId = auctionId;
-    }
-
-    public String getAuctionTitle() {
-        return auctionTitle;
-    }
-
-    public void setAuctionTitle(String auctionTitle) {
-        this.auctionTitle = auctionTitle;
-    }
-
-    public BigDecimal getBidAmount() {
-        return bidAmount;
-    }
-
-    public void setBidAmount(BigDecimal bidAmount) {
-        this.bidAmount = bidAmount;
-    }
-
-    public UUID getNotifiedId() {
-        return notifiedId;
-    }
-
-    public void setNotifiedId(UUID notifiedId) {
-        this.notifiedId = notifiedId;
-    }
-
-    public LocalDateTime getPlacedAt() {
-        return placedAt;
-    }
-
-    public void setPlacedAt(LocalDateTime placedAt) {
-        this.placedAt = placedAt;
-    }
-
-    public NotificationTypeEnum getType() {
-        return type;
-    }
-
-    public void setType(NotificationTypeEnum type) {
         this.type = type;
     }
 }

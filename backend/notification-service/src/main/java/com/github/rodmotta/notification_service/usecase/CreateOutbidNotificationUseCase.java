@@ -1,21 +1,19 @@
-package com.github.rodmotta.notification_service.service;
+package com.github.rodmotta.notification_service.usecase;
 
 import com.github.rodmotta.notification_service.messaging.event.BidPlacedEvent;
 import com.github.rodmotta.notification_service.persistence.entity.NotificationEntity;
 import com.github.rodmotta.notification_service.persistence.repository.NotificationRepository;
-import org.springframework.stereotype.Service;
+import com.github.rodmotta.notification_service.websocker.NotifyNotificationWebSocket;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import static com.github.rodmotta.notification_service.enums.NotificationTypeEnum.OUTBID;
 
-@Service
-public class OutbidNotification {
+@Component
+@RequiredArgsConstructor
+public class CreateOutbidNotificationUseCase {
     private final NotificationRepository notificationRepository;
-    private final NotifyWebSocket notifyWebSocket;
-
-    public OutbidNotification(NotificationRepository notificationRepository, NotifyWebSocket notifyWebSocket) {
-        this.notificationRepository = notificationRepository;
-        this.notifyWebSocket = notifyWebSocket;
-    }
+    private final NotifyNotificationWebSocket notifyNotificationWebSocket;
 
     public void execute(BidPlacedEvent message) {
 
@@ -33,6 +31,6 @@ public class OutbidNotification {
 
         notificationRepository.save(notification);
 
-        notifyWebSocket.notifyUserNotifications(notification.getNotifiedId());
+        notifyNotificationWebSocket.execute(notification.getNotifiedId());
     }
 }

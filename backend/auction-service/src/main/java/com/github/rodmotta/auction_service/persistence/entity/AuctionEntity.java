@@ -2,6 +2,7 @@ package com.github.rodmotta.auction_service.persistence.entity;
 
 import com.github.rodmotta.auction_service.enums.AuctionStatus;
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,8 +11,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @Entity
 @Table(name = "auctions", indexes = {

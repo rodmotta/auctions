@@ -2,15 +2,14 @@ package com.github.rodmotta.bid_service.config.middleware;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+@Log4j2
 @Component
 public class RequestLoggingFilter implements Filter {
-    private final Logger logger = LoggerFactory.getLogger(RequestLoggingFilter.class);
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
@@ -19,7 +18,7 @@ public class RequestLoggingFilter implements Filter {
             filterChain.doFilter(request, response);
             return;
         }
-        logger.info("Request: {} - {}", httpRequest.getMethod(), httpRequest.getRequestURI());
+        log.info("Request: {} - {}", httpRequest.getMethod(), httpRequest.getRequestURI());
         filterChain.doFilter(request, response);
     }
 }

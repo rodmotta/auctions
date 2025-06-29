@@ -1,22 +1,20 @@
-package com.github.rodmotta.bid_service.service;
+package com.github.rodmotta.bid_service.websocket;
 
 import com.github.rodmotta.bid_service.dto.response.BidResponse;
 import com.github.rodmotta.bid_service.persistence.repository.BidRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.UUID;
 
-@Service
-public class NotifyWebSocket {
+//fixme
+@Component
+@RequiredArgsConstructor
+public class NotifyAuctionBidsWebSocket {
     private final BidRepository bidRepository;
     private final SimpMessagingTemplate messagingTemplate;
-
-    public NotifyWebSocket(BidRepository bidRepository, SimpMessagingTemplate messagingTemplate) {
-        this.bidRepository = bidRepository;
-        this.messagingTemplate = messagingTemplate;
-    }
 
     public void execute(UUID auctionId) {
         List<BidResponse> topBids = bidRepository.findTop5ByAuctionIdOrderByAmountDesc(auctionId)

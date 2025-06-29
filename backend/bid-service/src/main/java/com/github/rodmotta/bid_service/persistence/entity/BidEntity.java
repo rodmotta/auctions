@@ -1,77 +1,37 @@
 package com.github.rodmotta.bid_service.persistence.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Data
+@NoArgsConstructor
 @Entity
-@Table(name = "bids")
+@Table(name = "bids", indexes = {
+        @Index(name = "idx_auction_id", columnList = "auction_id")
+})
 public class BidEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+    @Column(nullable = false)
     private UUID auctionId;
+    @Column(nullable = false)
     private UUID userId;
+    @Column(nullable = false)
     private String userName;
+    @Column(precision = 19, scale = 2, nullable = false)
     private BigDecimal amount;
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
     public BidEntity(UUID auctionId, BigDecimal amount) {
         this.auctionId = auctionId;
         this.amount = amount;
-    }
-
-    public BidEntity() {
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public UUID getAuctionId() {
-        return auctionId;
-    }
-
-    public void setAuctionId(UUID auctionId) {
-        this.auctionId = auctionId;
-    }
-
-    public UUID getUserId() {
-        return userId;
-    }
-
-    public void setUserId(UUID userId) {
-        this.userId = userId;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 }

@@ -2,6 +2,7 @@ package com.github.rodmotta.auction_service.controller;
 
 import com.github.rodmotta.auction_service.dto.request.AuctionRequest;
 import com.github.rodmotta.auction_service.dto.response.AuctionResponse;
+import com.github.rodmotta.auction_service.enums.AuctionStatus;
 import com.github.rodmotta.auction_service.security.JWTUtils;
 import com.github.rodmotta.auction_service.security.User;
 import com.github.rodmotta.auction_service.usecase.CreateAuctionUseCase;
@@ -37,8 +38,8 @@ public class AuctionController {
 
     @GetMapping
     @ResponseStatus(OK)
-    public List<AuctionResponse> getAllAuctions() {
-        return getAuctionsUseCase.execute();
+    public List<AuctionResponse> getAllAuctions(@RequestParam(defaultValue = "ACTIVE") AuctionStatus status) {
+        return getAuctionsUseCase.execute(status);
     }
 
     @GetMapping("{id}")

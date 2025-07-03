@@ -24,27 +24,28 @@ function Navbar() {
                     Leilão Online
                 </h1>
                 {isAuthenticated
-                    ?
-                    <div className="flex gap-2">
+                    ? (
+                        <div className="flex gap-2">
 
-                        <NotificationDropdown />
+                            <NotificationDropdown />
 
-                        <button
-                            className="btn btn-ghost rounded-lg px-2 py-2"
-                            onClick={handleLogout}
-                        >
-                            <LogOut />
-                        </button>
-                    </div>
-                    :
-                    <div className="flex gap-2">
-                        <button
-                            className="btn btn-neutral rounded-lg"
-                            onClick={getKeycloakLoginUrl}
-                        >
-                            Entrar
-                        </button>
-                    </div>
+                            <button
+                                className="btn btn-ghost rounded-lg px-2 py-2"
+                                onClick={handleLogout}
+                            >
+                                <LogOut />
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="flex gap-2">
+                            <button
+                                className="btn btn-neutral rounded-lg"
+                                onClick={getKeycloakLoginUrl}
+                            >
+                                Entrar
+                            </button>
+                        </div>
+                    )
                 }
 
             </div>

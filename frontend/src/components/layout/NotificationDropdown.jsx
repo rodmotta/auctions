@@ -1,8 +1,9 @@
 import { Bell } from "lucide-react"
 import { useNavigate } from "react-router";
-import { formatCurrencyBR, formatDateTimeBR } from "../../utils/formatterUtils";
+import { formatCurrencyBR } from "../../utils/formatterUtils";
 import { useEffect } from "react";
 import useNotificationStore from "../../stores/notificationStore";
+import dayjs from "dayjs";
 
 function NotificationDropdown() {
     const navigate = useNavigate();
@@ -59,7 +60,7 @@ function NotificationDropdown() {
                                                         <p className="font-semibold">{`Você venceu o leilão!`}</p>
                                                         <div className="flex justify-between items-center mt-1 text-xs text-gray-400">
                                                             <span>{notification.auctionTitle}</span>
-                                                            <span>{formatDateTimeBR(notification.placedAt)}</span>
+                                                            <span>{dayjs(notification.placedAt).format('DD/MM/YYYY, HH:mm')}</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -67,10 +68,10 @@ function NotificationDropdown() {
                                                 <div className="flex items-start gap-2">
                                                     <span className="text-xl">🔨</span>
                                                     <div className="flex-1">
-                                                        {/* <p className="font-semibold">{`Você foi superado por um novo lance de R$ ${formatCurrencyBR(notification.bidAmount)}`}</p> */}
+                                                        <p className="font-semibold">{`Você foi superado por um novo lance de R$ ${formatCurrencyBR(notification.bidAmount)}`}</p>
                                                         <div className="flex justify-between items-center mt-1 text-xs text-gray-400">
                                                             <span>{notification.auctionTitle}</span>
-                                                            <span>{formatDateTimeBR(notification.placedAt)}</span>
+                                                            <span>{dayjs(notification.placedAt).format('DD/MM/YYYY, HH:mm')}</span>
                                                         </div>
                                                     </div>
                                                 </div>

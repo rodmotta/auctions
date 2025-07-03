@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router";
 import { formatCurrencyBR, formatTimeRemaining } from "../../../utils/formatterUtils";
 import { Clock, Users } from "lucide-react";
+import dayjs from "dayjs";
 
 function AuctionCard({ auction }) {
     const navigate = useNavigate();
@@ -30,13 +31,24 @@ function AuctionCard({ auction }) {
                     </div>
                     <span className="font-semibold">{auction.bidsCounter}</span>
                 </div>
-                <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4" />
-                        <span>Tempo restante:</span>
+                {auction.status === "PENDING" &&
+                    <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-2">
+                            <Clock className="w-4 h-4" />
+                            <span>Data de inicio:</span>
+                        </div>
+                        <span className="font-semibold">{dayjs(auction.startDate).format('DD/MM/YYYY, HH:mm')}</span>
                     </div>
-                    <span className="font-semibold">{formatTimeRemaining(auction.endDate)}</span>
-                </div>
+                }
+                {auction.status === "ACTIVE" &&
+                    <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-2">
+                            <Clock className="w-4 h-4" />
+                            <span>Tempo restante:</span>
+                        </div>
+                        <span className="font-semibold">{formatTimeRemaining(auction.endDate)}</span>
+                    </div>
+                }
                 <div className="card-actions">
                     <button
                         className="btn btn-neutral rounded-lg w-full"

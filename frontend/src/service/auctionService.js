@@ -1,8 +1,9 @@
 import api from './api';
 
-export function getAuctions() {
+export function getAuctions(status) {
     try {
         const config = {
+            params: { status },
             skipAuth: true
         }
         return api.get('/auctions', config);

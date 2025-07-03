@@ -1,4 +1,5 @@
-import { formatCurrencyBR, formatDateTimeBR } from '../../../utils/formatterUtils';
+import dayjs from 'dayjs';
+import { formatCurrencyBR } from '../../../utils/formatterUtils';
 import { Crown, Users } from "lucide-react";
 
 function BidHistory({ bids }) {
@@ -22,7 +23,7 @@ function BidHistory({ bids }) {
                                 className='flex justify-between items-center px-4 py-2 bg-base-200 rounded-lg'>
                                 <div>
                                     <p className='text-sm font-semibold'>{bid.bidderName}</p>
-                                    <p className='text-sm text-stone-500'>{formatDateTimeBR(bid.timestamp)}</p>
+                                    <p className='text-sm text-stone-500'>{dayjs(bid.timestamp).format('DD/MM/YYYY, HH:mm')}</p>
                                 </div>
                                 <div className='flex items-center gap-2'>
                                     {idx === 0 && <Crown className='text-yellow-500 w-5 h-5' />}

@@ -1,6 +1,7 @@
-import { Clock, Gavel } from "lucide-react"
-import { formatCurrencyBR, formatDateTimeBR, formatTimeRemaining } from "../../../utils/formatterUtils"
+import { Gavel } from "lucide-react"
+import { formatCurrencyBR, formatTimeRemaining } from "../../../utils/formatterUtils"
 import PlaceBidForm from "./PlaceBidForm"
+import dayjs from "dayjs"
 
 function BidPanel({ auction, highestBid }) {
     return (
@@ -32,11 +33,11 @@ function BidPanel({ auction, highestBid }) {
             <div>
                 <div className="flex justify-between">
                     <p className="text-gray-500">Inicia em:</p>
-                    <p className="font-semibold">{formatDateTimeBR(auction.startDate)}</p>
+                    <p className="font-semibold">{dayjs(auction.startDate).format('DD/MM/YYYY, HH:mm')}</p>
                 </div>
                 <div className="flex justify-between">
                     <p className="text-gray-500">Termina em:</p>
-                    <p className="font-semibold">{formatDateTimeBR(auction.endDate)}</p>
+                    <p className="font-semibold">{dayjs(auction.endDate).format('DD/MM/YYYY, HH:mm')}</p>
                 </div>
                 <div className="flex justify-between">
                     <p className="text-gray-500">Tempo restante:</p>

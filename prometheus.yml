@@ -5,7 +5,7 @@ scrape_configs:
   - job_name: 'auction-service'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: ['host.docker.internal:8081']
+      - targets: ['host.docker.internal:8081'] #Lembrete: atenção ao usar host.docker.internal quando rodar fora do Docker Desktop
         labels:
           application: "auction-service"
 

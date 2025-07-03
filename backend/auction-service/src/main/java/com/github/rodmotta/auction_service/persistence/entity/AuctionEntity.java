@@ -32,7 +32,7 @@ public class AuctionEntity {
     private BigDecimal currentPrice;
     private BigDecimal minimumIncrement;
     @Column(nullable = false)
-    private Integer bidsCounter = 0;
+    private Integer bidsCounter;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     @Column(nullable = false, length = 20)
@@ -55,6 +55,10 @@ public class AuctionEntity {
         this.endDate = endDate;
         this.status = AuctionStatus.PENDING;
         this.createdAt = LocalDateTime.now();
+    }
+
+    public AuctionEntity(AuctionStatus status) {
+        this.status = status;
     }
 
     public void incrementBidsCounter() {
